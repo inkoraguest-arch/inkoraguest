@@ -12,11 +12,12 @@ export function ClientProfile() {
     const { user, isLoaded } = useUser();
     const { signOut } = useClerk();
     const navigate = useNavigate();
+    const profile = user?.publicMetadata;
 
     // Edit Profile State
     const [isEditing, setIsEditing] = useState(false);
     const [editForm, setEditForm] = useState({
-        full_name: profile?.full_name || '',
+        full_name: profile?.full_name || user?.fullName || '',
         city: profile?.city || ''
     });
     const [saving, setSaving] = useState(false);
@@ -29,7 +30,6 @@ export function ClientProfile() {
     // Filter only saved artists for the demonstration
     const savedArtists = MOCK_ARTISTS.filter(a => a.saved || a.id === '2');
 
-    const profile = user?.publicMetadata;
     const displayName = isEditing ? editForm.full_name : (profile?.full_name || user?.fullName || user?.primaryEmailAddress?.emailAddress?.split('@')[0] || 'Visitante');
     const displayCity = isEditing ? editForm.city : (profile?.city || 'São Paulo, BR');
     const initial = displayName.charAt(0).toUpperCase();
