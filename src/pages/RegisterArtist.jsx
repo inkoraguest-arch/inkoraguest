@@ -3,10 +3,23 @@ import { useNavigate } from 'react-router-dom';
 import { Button } from '../components/Button';
 import { ArrowLeft, Upload, User, MapPin, Mail, Phone, Hash, Clock, BookOpen, Lock } from 'lucide-react';
 import { supabase } from '../lib/supabase';
+import { useUser } from '@clerk/clerk-react';
 import './RegisterForms.css';
 
 export function RegisterArtist() {
     const navigate = useNavigate();
+    const { user, isLoaded } = useUser();
+    
+    // Limits based on plan
+    const profile = user?.publicMetadata;
+    const planLimits = {
+        'free': 10,
+        'mochileiro': 15,
+        'viajante': 50,
+        'pro': 100,
+        'estudio': 200
+    };
+    const maxPhotos = planLimits[profile?.subscription_plan] || 10;
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [name, setName] = useState('');
@@ -123,8 +136,13 @@ export function RegisterArtist() {
                 file,
                 preview: URL.createObjectURL(file)
             }));
-            // Limit to 10 photos
-            setPortfolioFiles(prev => [...prev, ...newFiles].slice(0, 10));
+            
+            if (portfolioFiles.length + newFiles.length > maxPhotos) {
+                alert(`Ops! Seu plano atual permite no máximo ${maxPhotos} fotos. Faça um upgrade nos "Planos" para postar mais!`);
+                return;
+            }
+
+            setPortfolioFiles(prev => [...prev, ...newFiles].slice(0, maxPhotos));
         }
     };
 
@@ -162,8 +180,12 @@ export function RegisterArtist() {
                 </div>
 
                 <div className="input-group">
-                    <label>Portfólio (Até 10 fotos)</label>
-                    <p className="auth-subtitle" style={{ fontSize: '12px', marginTop: '-4px' }}>Adicione seus melhores trabalhos</p>
+                    <label>Portfólio (Até {maxPhotos} fotos)</label>
+                    <p className="auth-subtitle" style={{ fontSize: '12px', marginTop: '-4px' }}>
+                        {profile?.subscription_plan && profile.subscription_plan !== 'free' 
+                          ? `Benefício do plano ${profile.subscription_plan} ativo.` 
+                          : 'Plano gratuito limitado a 10 fotos.'}
+                    </p>
 
                     <div className="photo-grid-upload">
                         {/* Display existing previews */}
@@ -178,9 +200,9 @@ export function RegisterArtist() {
                             </div>
                         ))}
 
-                        {/* Empty slots that can be clicked to upload */}
-                        {[...Array(10 - portfolioFiles.length)].map((_, i) => (
-                            <div key={`empty-${i}`} className="photo-slot" style={{ position: 'relative' }}>
+                        {/* Empty slots */}
+                        {portfolioFiles.length < maxPhotos && (
+                            <div className="photo-slot" style={{ position: 'relative' }}>
                                 <Upload size={16} />
                                 <span style={{ marginTop: '4px' }}>Foto</span>
                                 <input
@@ -191,8 +213,13 @@ export function RegisterArtist() {
                                     style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', opacity: 0, cursor: 'pointer' }}
                                 />
                             </div>
-                        ))}
+                        )}
                     </div>
+                    {portfolioFiles.length >= maxPhotos && (
+                        <p style={{ color: 'var(--primary)', fontSize: '12px', marginTop: '8px', cursor: 'pointer', fontWeight: 'bold' }} onClick={() => navigate('/planos')}>
+                            Limite atingido! Clique aqui para fazer Upgrade.
+                        </p>
+                    )}
                 </div>
 
                 <div className="input-group" style={{ marginTop: '16px' }}>

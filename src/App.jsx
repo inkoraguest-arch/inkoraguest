@@ -17,6 +17,7 @@ import { AdminDashboard } from './pages/AdminDashboard';
 import { Pricing } from './pages/Pricing';
 import { BottomNav } from './components/BottomNav';
 import { useSyncUser } from './lib/useSyncUser';
+import { PaymentSuccess } from './pages/PaymentSuccess';
 
 // Protected Route Component (Clerk version)
 const ProtectedRoute = ({ children, allowedRoles }) => {
@@ -60,6 +61,7 @@ function AppContent() {
         {/* Public Routes */}
         <Route path="/" element={<LandingPage />} />
         <Route path="/planos" element={<Pricing />} />
+        <Route path="/success" element={<PaymentSuccess />} />
 
         {/* Auth Routes */}
         <Route path="/login" element={<Login />} />
