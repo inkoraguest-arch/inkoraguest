@@ -5,14 +5,23 @@ import { ArrowLeft, MapPin, Star, Share2, MessageCircle, LogOut, Loader } from '
 import { PhotoGrid } from '../components/PhotoGrid';
 import { CalendarManager } from '../components/CalendarManager';
 import { Button } from '../components/Button';
-import { useAuth } from '../lib/AuthContext';
+import { useUser, useClerk } from '@clerk/clerk-react';
 import { supabase } from '../lib/supabase';
+
 import './ArtistProfile.css';
 
 export function ArtistProfile() {
     const { id } = useParams();
     const navigate = useNavigate();
-    const { signOut, profile } = useAuth();
+    const { user } = useUser();
+    const { signOut } = useClerk();
+    
+    // Create a mock profile object that mimics the old AuthContext structure for database operations
+    const profile = user ? {
+        id: user.id,
+        role: user.publicMetadata?.role || localStorage.getItem('inkoraRole')
+    } : null;
+
 
     const [artist, setArtist] = useState(null);
     const [loading, setLoading] = useState(true);
@@ -25,7 +34,8 @@ export function ArtistProfile() {
         price_range: '',
         schedule_text: '',
         spots_status: '',
-        address: ''
+        address: '',
+        pix_key: ''
     });
     const [saving, setSaving] = useState(false);
     const [selectedSlot, setSelectedSlot] = useState(null);
@@ -106,7 +116,8 @@ export function ArtistProfile() {
                     spotsStatus: finalSpots,
                     profilePic: data.avatar_url || null,
                     portfolioFull: artistData?.portfolio_urls || studioData?.studio_photos || [],
-                    address: data.address || ''
+                    address: data.address || '',
+                    pixKey: data.pix_key || ''
                 });
 
                 // Initialize edit form
@@ -116,7 +127,8 @@ export function ArtistProfile() {
                     price_range: finalPriceRange,
                     schedule_text: finalSchedule,
                     spots_status: finalSpots,
-                    address: data.address || ''
+                    address: data.address || '',
+                    pix_key: data.pix_key || ''
                 });
 
             } else {
@@ -152,6 +164,11 @@ export function ArtistProfile() {
             slotInfo = ` para o dia ${dateStr} às ${selectedSlot.slot_time}`;
         } else if (artist.spotsStatus && artist.spotsStatus !== 'Consultar') {
             slotInfo = ` referente a: ${artist.spotsStatus}`;
+        }
+
+        if (artist.pixKey && artist.pixKey.trim() !== '') {
+            navigator.clipboard.writeText(artist.pixKey).catch(() => {});
+            alert(`Pagamento / Orçamento\n\nA Chave PIX do artista é: ${artist.pixKey}\n(Já copiamos ela para você!)\n\nVamos te levar para o WhatsApp para você confirmar os detalhes e enviar o comprovante.`);
         }
 
         const message = encodeURIComponent(`Olá ${artist.name}, gostei muito do seu portfólio no app Inkora e gostaria de solicitar um orçamento para uma tatuagem${slotInfo}!`);
@@ -191,10 +208,10 @@ export function ArtistProfile() {
                 throw upsertError;
             }
 
-            // Update profiles table for address
+            // Update profiles table for address and pix
             const { error: profileError } = await supabase
                 .from('profiles')
-                .update({ address: editForm.address })
+                .update({ address: editForm.address, pix_key: editForm.pix_key })
                 .eq('id', profile.id);
 
             if (profileError) throw profileError;
@@ -207,7 +224,8 @@ export function ArtistProfile() {
                 priceRange: editForm.price_range,
                 scheduleText: editForm.schedule_text,
                 spotsStatus: editForm.spots_status,
-                address: editForm.address
+                address: editForm.address,
+                pixKey: editForm.pix_key
             }));
 
             setIsEditing(false);
@@ -222,6 +240,11 @@ export function ArtistProfile() {
     const handleImageUpload = async (e) => {
         const file = e.target.files[0];
         if (!file || !profile) return;
+        
+        if (file.size > 15 * 1024 * 1024) {
+            alert('Arquivo muito grande! O limite é de 15MB para fotos e vídeos.');
+            return;
+        }
 
         setSaving(true);
         try {
@@ -557,6 +580,23 @@ export function ArtistProfile() {
                         </div>
                     )}
 
+                    {isEditing && (
+                        <div style={{ marginBottom: '16px', marginTop: '16px' }}>
+                            <label style={{ fontSize: '12px', color: 'var(--text-secondary)' }}>Sua Chave PIX (Para Recebimentos)</label>
+                            <input
+                                type="text"
+                                value={editForm.pix_key}
+                                onChange={(e) => setEditForm({ ...editForm, pix_key: e.target.value })}
+                                placeholder="ex: (11) 99999-9999, email@pix.com..."
+                                style={{
+                                    width: '100%', padding: '8px', borderRadius: '8px',
+                                    background: 'var(--surface)', border: '1px solid var(--border-color)',
+                                    color: 'white', marginTop: '4px'
+                                }}
+                            />
+                        </div>
+                    )}
+
                     {isEditing ? (
                         <div style={{ marginBottom: '16px', marginTop: '16px' }}>
                             <label style={{ fontSize: '12px', color: 'var(--text-secondary)' }}>Sua Biografia</label>
@@ -735,7 +775,7 @@ export function ArtistProfile() {
                         <div>
                             <input
                                 type="file"
-                                accept="image/*"
+                                accept="image/*,video/mp4,video/quicktime,video/webm"
                                 onChange={handleImageUpload}
                                 style={{ display: 'none' }}
                                 id="portfolio-upload"
@@ -744,7 +784,7 @@ export function ArtistProfile() {
                                 background: 'rgba(229, 32, 32, 0.1)', color: 'var(--primary)',
                                 padding: '6px 12px', borderRadius: '12px', fontSize: '12px', fontWeight: 'bold', cursor: 'pointer'
                             }}>
-                                + Adicionar Foto
+                                + Adicionar Mídia
                             </label>
                         </div>
                     )}

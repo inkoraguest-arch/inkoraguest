@@ -1,12 +1,14 @@
 import { NavLink } from 'react-router-dom';
 import { Home, Compass, User, Bookmark, ShoppingBag } from 'lucide-react';
-import { useAuth } from '../lib/AuthContext';
+import { useUser } from '@clerk/clerk-react';
 import './BottomNav.css';
 
 export function BottomNav() {
-    const { profile } = useAuth();
-    const role = profile?.role || 'client';
+    const { user } = useUser();
+    const role = user?.publicMetadata?.role || localStorage.getItem('inkoraRole') || 'client';
     const isClient = role === 'client';
+    const profileId = user?.id; // Clerk's ID is used as the profile ID in Supabase
+
 
     return (
         <nav className="bottom-nav">
@@ -33,7 +35,7 @@ export function BottomNav() {
             )}
 
             <NavLink
-                to={isClient ? "/profile" : `/artist/${profile?.id}`}
+                to={isClient ? "/profile" : `/artist/${profileId}`}
                 className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}
             >
                 <User size={24} />
