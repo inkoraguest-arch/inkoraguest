@@ -1,0 +1,165 @@
+.artist-profile-page {
+    width: 100%;
+    padding-bottom: 100px;
+    /* Space for the CTA Button + BottomNav space logic handled in App */
+}
+
+.profile-header {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    padding: 16px 20px;
+    display: flex;
+    justify-content: space-between;
+    z-index: 10;
+}
+
+.back-btn,
+.share-btn {
+    background-color: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    color: white;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+}
+
+.profile-main-img {
+    width: 100%;
+    height: 350px;
+    object-fit: cover;
+    object-position: center 20%;
+    display: block;
+}
+
+.profile-info-container {
+    padding: 24px 20px;
+    background-color: var(--bg-primary);
+    border-radius: 20px 20px 0 0;
+    margin-top: -20px;
+    position: relative;
+    z-index: 2;
+}
+
+.profile-name {
+    font-size: 28px;
+    font-weight: 800;
+    margin-bottom: 4px;
+}
+
+.profile-styles {
+    color: var(--text-secondary);
+    font-size: 15px;
+    margin-bottom: 16px;
+    font-weight: 500;
+}
+
+.profile-meta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 20px;
+    font-size: 14px;
+}
+
+.meta-item {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    color: var(--text-primary);
+}
+
+.meta-dot {
+    color: var(--text-tertiary);
+}
+
+.price-range {
+    color: #4CAF50;
+    font-weight: 600;
+    letter-spacing: 1px;
+}
+
+.profile-bio {
+    color: var(--text-secondary);
+    line-height: 1.6;
+    font-size: 15px;
+}
+
+.schedule-section {
+    padding: 0 20px 24px;
+}
+
+.schedule-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.schedule-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px;
+    background-color: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+}
+
+.schedule-city {
+    font-size: 16px;
+    margin-bottom: 4px;
+    font-weight: 600;
+}
+
+.schedule-dates {
+    font-size: 14px;
+    color: var(--text-secondary);
+}
+
+.schedule-status {
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.status-open {
+    background-color: rgba(76, 175, 80, 0.1);
+    color: #4CAF50;
+}
+
+.status-booking {
+    background-color: rgba(245, 166, 35, 0.1);
+    color: #F5A623;
+}
+
+.status-closed {
+    background-color: rgba(229, 32, 32, 0.1);
+    color: var(--primary);
+}
+
+.portfolio-section {
+    padding-bottom: 20px;
+}
+
+.portfolio-section .section-title {
+    padding: 0 20px;
+}
+
+.cta-container {
+    position: fixed;
+    bottom: calc(70px + env(safe-area-inset-bottom));
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    max-width: 600px;
+    padding: 16px 20px;
+    background: linear-gradient(to top, var(--bg-primary) 80%, transparent);
+    z-index: 90;
+}

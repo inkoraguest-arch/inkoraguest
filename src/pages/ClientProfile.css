@@ -1,0 +1,84 @@
+.client-profile-page {
+    padding: 20px;
+}
+
+.client-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 32px;
+}
+
+.client-title {
+    font-size: 24px;
+    font-weight: 800;
+}
+
+.client-actions {
+    display: flex;
+    gap: 16px;
+}
+
+.icon-btn {
+    color: var(--text-primary);
+}
+
+.client-info {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 32px;
+}
+
+.client-avatar {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    background-color: var(--bg-tertiary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--text-primary);
+    border: 2px solid var(--border-color);
+}
+
+.client-name {
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: 4px;
+}
+
+.client-location {
+    color: var(--text-secondary);
+    font-size: 14px;
+}
+
+.tabs {
+    display: flex;
+    border-bottom: 1px solid var(--border-color);
+    margin-bottom: 24px;
+}
+
+.tab {
+    flex: 1;
+    padding: 16px;
+    text-align: center;
+    font-weight: 600;
+    color: var(--text-secondary);
+    border-bottom: 2px solid transparent;
+    transition: all 0.2s;
+}
+
+.tab.active {
+    color: var(--primary);
+    border-bottom-color: var(--primary);
+}
+
+.empty-state {
+    text-align: center;
+    padding: 48px 20px;
+    color: var(--text-tertiary);
+    font-size: 15px;
+}

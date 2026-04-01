@@ -1,0 +1,152 @@
+.calendar-manager {
+    padding: 0 20px;
+    margin-bottom: 24px;
+}
+
+.calendar-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 16px;
+    color: var(--text-primary);
+}
+
+.calendar-header h3 {
+    margin: 0;
+    font-size: 16px;
+    font-weight: 700;
+}
+
+.add-slot-form {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 20px;
+}
+
+.slot-input {
+    flex: 1;
+    background: var(--surface);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 8px 12px;
+    color: white;
+    font-size: 14px;
+    outline: none;
+}
+
+.slot-input:focus {
+    border-color: var(--primary);
+}
+
+.add-slot-btn {
+    background: var(--primary);
+    color: white;
+    border: none;
+    padding: 0 16px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-weight: bold;
+    font-size: 13px;
+    cursor: pointer;
+}
+
+.add-slot-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.slots-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 10px;
+}
+
+.slot-card {
+    background: var(--surface);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: all 0.2s ease;
+}
+
+.slot-card.clickable {
+    cursor: pointer;
+}
+
+.slot-card.clickable:hover {
+    border-color: var(--primary);
+    background: rgba(229, 32, 32, 0.05);
+}
+
+.slot-card.selected {
+    border-color: var(--primary);
+    background: rgba(229, 32, 32, 0.1);
+}
+
+.slot-info {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.slot-date {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+.slot-separator {
+    color: var(--text-tertiary);
+    font-size: 12px;
+}
+
+.slot-time {
+    font-size: 12px;
+    color: var(--text-secondary);
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.delete-slot-btn {
+    background: transparent;
+    border: none;
+    color: var(--text-tertiary);
+    cursor: pointer;
+    padding: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
+}
+
+.delete-slot-btn:hover {
+    color: var(--primary);
+    background: rgba(229, 32, 32, 0.1);
+}
+
+.selected-icon {
+    color: var(--primary);
+}
+
+.no-slots {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 24px;
+    background: var(--bg-tertiary);
+    border-radius: 12px;
+    color: var(--text-tertiary);
+    font-size: 13px;
+    border: 1px dashed var(--border-color);
+}
+
+.calendar-loading {
+    display: flex;
+    justify-content: center;
+    padding: 20px;
+}

@@ -1,0 +1,26 @@
+.photo-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2px;
+    background-color: var(--bg-primary);
+    /* For the gap lines */
+}
+
+.grid-item {
+    aspect-ratio: 1 / 1;
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+}
+
+.grid-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+    background-color: var(--bg-secondary);
+}
+
+.grid-item:hover img {
+    transform: scale(1.05);
+}

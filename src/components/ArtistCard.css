@@ -1,0 +1,168 @@
+.artist-card {
+    background-color: var(--bg-secondary);
+    border-radius: 12px;
+    padding: 16px;
+    margin-bottom: 24px;
+    border: 1px solid var(--border-color);
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.artist-card:active {
+    transform: scale(0.98);
+}
+
+.artist-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 16px;
+}
+
+.artist-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.artist-avatar {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid var(--primary);
+}
+
+.artist-details {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.artist-name {
+    font-size: 16px;
+    font-weight: 600;
+    margin: 0;
+    color: var(--text-primary);
+}
+
+.artist-location,
+.artist-rating {
+    font-size: 12px;
+    color: var(--text-secondary);
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.artist-styles {
+    color: var(--text-tertiary);
+}
+
+.icon-red {
+    color: var(--primary);
+}
+
+.icon-red-fill {
+    color: var(--primary);
+}
+
+.icon-gray {
+    color: var(--text-tertiary);
+}
+
+.icon-yellow {
+    color: #F5A623;
+}
+
+.save-btn {
+    padding: 8px;
+    border-radius: 50%;
+    background-color: var(--bg-tertiary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.2s;
+}
+
+.save-btn:hover {
+    background-color: var(--border-color);
+}
+
+.next-guest-spot {
+    background-color: rgba(229, 32, 32, 0.1);
+    border-left: 3px solid var(--primary);
+    border-radius: 4px;
+    padding: 10px 12px;
+    margin-bottom: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.guest-spot-badge {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--primary);
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.guest-spot-details {
+    font-size: 14px;
+    color: var(--text-primary);
+}
+
+.guest-spot-details>span {
+    color: var(--text-secondary);
+    font-size: 13px;
+}
+
+.artist-portfolio-preview {
+    display: flex;
+    gap: 8px;
+    height: 120px;
+}
+
+.portfolio-preview-img-wrapper {
+    flex: 1;
+    border-radius: 8px;
+    overflow: hidden;
+    height: 100%;
+}
+
+.portfolio-preview-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.portfolio-preview-img-wrapper:hover .portfolio-preview-img {
+    transform: scale(1.05);
+}
+
+.artist-card-action {
+    margin-top: 16px;
+}
+
+.whatsapp-contact-btn {
+    width: 100%;
+    padding: 12px;
+    background-color: #25D366;
+    /* WhatsApp Green */
+    color: white;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 14px;
+    transition: all 0.2s;
+    text-align: center;
+}
+
+.whatsapp-contact-btn:hover {
+    background-color: #128C7E;
+    transform: translateY(-2px);
+}

@@ -1,0 +1,126 @@
+.artist-opportunities {
+    padding: 24px 20px 0;
+}
+
+.opp-cards {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.opp-card {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 16px;
+    border-radius: 12px;
+    cursor: pointer;
+    border: 1px solid var(--border-color);
+    transition: transform 0.2s;
+}
+
+.opp-card:hover {
+    transform: translateX(4px);
+}
+
+.studio-opp {
+    background: linear-gradient(to right, rgba(156, 39, 176, 0.1), transparent);
+    border-left: 4px solid #9C27B0;
+}
+
+.studio-opp .opp-icon {
+    color: #9C27B0;
+}
+
+.shop-opp {
+    background: linear-gradient(to right, rgba(245, 166, 35, 0.1), transparent);
+    border-left: 4px solid #F5A623;
+}
+
+.shop-opp .opp-icon {
+    color: #F5A623;
+}
+
+.opp-text h4 {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 2px;
+}
+
+.opp-text p {
+    font-size: 13px;
+    color: var(--text-secondary);
+}
+
+/* Create Post Section */
+.create-post-container {
+    background: var(--surface);
+    border: 1px solid var(--border-color);
+    border-radius: 16px;
+    padding: 16px;
+    margin-bottom: 24px;
+}
+
+.create-post-input-wrapper {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+}
+
+.create-post-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+    flex-shrink: 0;
+}
+
+.create-post-input {
+    flex-grow: 1;
+    background: transparent;
+    border: none;
+    color: var(--text-primary);
+    font-size: 15px;
+    resize: none;
+    outline: none;
+    padding-top: 10px;
+    font-family: inherit;
+    min-height: 24px;
+}
+
+.create-post-input::placeholder {
+    color: var(--text-secondary);
+}
+
+.create-post-actions {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px solid var(--border-color);
+}
+
+.create-post-submit {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background-color: var(--primary);
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-weight: 600;
+    font-size: 14px;
+    cursor: pointer;
+    transition: opacity 0.2s;
+}
+
+.create-post-submit:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.create-post-submit:hover:not(:disabled) {
+    opacity: 0.9;
+}
