@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react';
 import { Search, SlidersHorizontal, Bell, Check, Shield } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
