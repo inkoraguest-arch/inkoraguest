@@ -2,14 +2,15 @@ import { useState } from 'react';
 import { MOCK_ARTISTS } from '../data/mockData';
 import { ArtistCard } from '../components/ArtistCard';
 import { Settings, Bell, LogOut } from 'lucide-react';
-import { useAuth } from '../lib/AuthContext';
+import { useUser, useClerk } from '@clerk/clerk-react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 import './ClientProfile.css';
 
 export function ClientProfile() {
     const [activeTab, setActiveTab] = useState('saved');
-    const { signOut, profile, user } = useAuth();
+    const { user, isLoaded } = useUser();
+    const { signOut } = useClerk();
     const navigate = useNavigate();
 
     // Edit Profile State
@@ -28,12 +29,13 @@ export function ClientProfile() {
     // Filter only saved artists for the demonstration
     const savedArtists = MOCK_ARTISTS.filter(a => a.saved || a.id === '2');
 
-    const displayName = isEditing ? editForm.full_name : (profile?.full_name || user?.email?.split('@')[0] || 'Visitante');
+    const profile = user?.publicMetadata;
+    const displayName = isEditing ? editForm.full_name : (profile?.full_name || user?.fullName || user?.primaryEmailAddress?.emailAddress?.split('@')[0] || 'Visitante');
     const displayCity = isEditing ? editForm.city : (profile?.city || 'São Paulo, BR');
     const initial = displayName.charAt(0).toUpperCase();
 
     const handleSaveProfile = async () => {
-        if (!profile) return;
+        if (!user) return;
         setSaving(true);
         try {
             const { error } = await supabase
@@ -42,7 +44,7 @@ export function ClientProfile() {
                     full_name: editForm.full_name,
                     city: editForm.city
                 })
-                .eq('id', profile.id);
+                .eq('id', user.id);
 
             if (error) throw error;
 
@@ -58,12 +60,12 @@ export function ClientProfile() {
 
     const handleAvatarUpload = async (e) => {
         const file = e.target.files?.[0];
-        if (!file || !profile) return;
+        if (!file || !user) return;
 
         setSaving(true);
         try {
             const fileExt = file.name.split('.').pop();
-            const fileName = `${profile.id}/avatar_${Date.now()}.${fileExt}`;
+            const fileName = `${user.id}/avatar_${Date.now()}.${fileExt}`;
 
             // Upload the new avatar
             const { error: uploadError } = await supabase.storage
@@ -79,7 +81,7 @@ export function ClientProfile() {
             const { error: updateError } = await supabase
                 .from('profiles')
                 .update({ avatar_url: publicUrl })
-                .eq('id', profile.id);
+                .eq('id', user.id);
 
             if (updateError) throw updateError;
 

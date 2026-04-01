@@ -3,13 +3,14 @@ import { TopBar } from '../components/TopBar';
 import { ProductCard } from '../components/ProductCard';
 import { Loader, Plus, X } from 'lucide-react';
 import { supabase } from '../lib/supabase';
-import { useAuth } from '../lib/AuthContext';
+import { useUser } from '@clerk/clerk-react';
 import './StoreArtist.css';
 
 const MOCK_PRODUCTS = [];
 
 export function StoreArtist() {
-    const { profile } = useAuth();
+    const { user, isLoaded } = useUser();
+    const profile = user?.publicMetadata;
     const [products, setProducts] = useState([]);
     const [loading, setLoading] = useState(true);
 
@@ -64,7 +65,7 @@ export function StoreArtist() {
 
     const handleAddProduct = async (e) => {
         e.preventDefault();
-        if (!profile) return;
+        if (!user) return;
 
         setAddingLoading(true);
         try {
@@ -72,7 +73,7 @@ export function StoreArtist() {
                 .from('products')
                 .insert([
                     {
-                        seller_id: profile.id,
+                        seller_id: user.id,
                         title: newProduct.title,
                         description: newProduct.description,
                         price: parseFloat(newProduct.price) || 0,

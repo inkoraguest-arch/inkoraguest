@@ -1,19 +1,19 @@
-import { useState, useEffect } from 'react';
 import { Search, SlidersHorizontal, Bell, Check, Shield } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
-import { useAuth } from '../lib/AuthContext';
+import { useUser } from '@clerk/clerk-react';
 import logoHorizontal from '../assets/images/logo-horizontal.jpg';
 import './TopBar.css';
 
 export function TopBar() {
-    const { profile } = useAuth();
+    const { user, isLoaded } = useUser();
+    const profile = user?.publicMetadata;
     const [notifications, setNotifications] = useState([]);
     const [showNotifications, setShowNotifications] = useState(false);
     const unreadCount = notifications.filter(n => !n.read).length;
 
     useEffect(() => {
-        if (profile) {
+        if (user) {
             fetchNotifications();
 
             // Subscribe to new notifications
@@ -23,7 +23,7 @@ export function TopBar() {
                     event: 'INSERT',
                     schema: 'public',
                     table: 'notifications',
-                    filter: `user_id=eq.${profile.id}`
+                    filter: `user_id=eq.${user.id}`
                 }, (payload) => {
                     setNotifications(prev => [payload.new, ...prev]);
                 })
@@ -33,16 +33,17 @@ export function TopBar() {
                 supabase.removeChannel(subscription);
             };
         }
-    }, [profile]);
+    }, [user]);
 
     const fetchNotifications = async () => {
+        if (!user) return;
         const { data, error } = await supabase
             .from('notifications')
             .select(`
                 *,
                 from_user:from_user_id (full_name, avatar_url)
             `)
-            .eq('user_id', profile.id)
+            .eq('user_id', user.id)
             .order('created_at', { ascending: false })
             .limit(10);
 
@@ -50,12 +51,12 @@ export function TopBar() {
     };
 
     const markAsRead = async () => {
-        if (unreadCount === 0) return;
+        if (unreadCount === 0 || !user) return;
 
         const { error } = await supabase
             .from('notifications')
             .update({ read: true })
-            .eq('user_id', profile.id)
+            .eq('user_id', user.id)
             .eq('read', false);
 
         if (!error) {

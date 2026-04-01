@@ -4,12 +4,13 @@ import { FeedPost } from '../components/FeedPost';
 import { Store, Palmtree, Loader, Send, User } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
-import { useAuth } from '../lib/AuthContext';
+import { useUser } from '@clerk/clerk-react';
 import './HomeArtist.css';
 
 export function HomeArtist() {
     const navigate = useNavigate();
-    const { profile } = useAuth();
+    const { user, isLoaded } = useUser();
+    const profile = user?.publicMetadata;
     const [posts, setPosts] = useState([]);
     const [loading, setLoading] = useState(true);
     const [newPostContent, setNewPostContent] = useState('');
@@ -76,7 +77,7 @@ export function HomeArtist() {
     };
 
     const handleCreatePost = async () => {
-        if (!newPostContent.trim() || !profile) return;
+        if (!newPostContent.trim() || !user) return;
 
         setPosting(true);
         try {
@@ -84,7 +85,7 @@ export function HomeArtist() {
                 .from('posts')
                 .insert([
                     {
-                        author_id: profile.id,
+                        author_id: user.id,
                         content: newPostContent.trim(),
                         media_url: newPostImage || null
                     }
@@ -112,10 +113,10 @@ export function HomeArtist() {
 
     const handleImageUpload = async (e) => {
         const file = e.target.files?.[0];
-        if (!file || !profile) return;
+        if (!file || !user) return;
 
         const fileExt = file.name.split('.').pop();
-        const fileName = `${profile.id}/feed_${Date.now()}.${fileExt}`;
+        const fileName = `${user.id}/feed_${Date.now()}.${fileExt}`;
 
         try {
             const { error: uploadError } = await supabase.storage
@@ -155,6 +156,7 @@ export function HomeArtist() {
                 </div>
             </div>
 
+            {!isLoaded ? null : (
             <div className="feed-container">
                 <h2 className="section-title">Feed da Comunidade</h2>
 
@@ -224,6 +226,7 @@ export function HomeArtist() {
                     ))
                 )}
             </div>
+            )}
         </div>
     );
 }
