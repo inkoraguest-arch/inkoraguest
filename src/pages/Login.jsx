@@ -13,18 +13,10 @@ export function Login() {
                 <p className="auth-subtitle">A plataforma definitiva de Guest Spot</p>
             </div>
 
-            <div className="clerk-auth-container">
+            <div className="clerk-auth-container" style={{ position: 'relative', display: 'flex', justifyContent: 'center' }}>
                 <SignIn 
-                    routing="path" 
-                    path="/login" 
-                    signUpUrl="/register"
-                    forceRedirectUrl="/home"
-                    appearance={{
-                        elements: {
-                            formButtonPrimary: 'clerk-submit-button',
-                            card: 'clerk-card-style'
-                        }
-                    }}
+                    fallbackRedirectUrl="/home"
+                    signUpFallbackRedirectUrl="/register"
                 />
             </div>
         </div>
