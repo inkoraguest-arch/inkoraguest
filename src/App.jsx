@@ -16,6 +16,7 @@ import { SearchClient } from './pages/SearchClient';
 import { AdminDashboard } from './pages/AdminDashboard';
 import { Pricing } from './pages/Pricing';
 import { BottomNav } from './components/BottomNav';
+import { useSyncUser } from './lib/useSyncUser';
 
 // Protected Route Component (Clerk version)
 const ProtectedRoute = ({ children, allowedRoles }) => {
@@ -40,6 +41,9 @@ const ProtectedRoute = ({ children, allowedRoles }) => {
 function AppContent() {
   const location = useLocation();
   const { user, isLoaded } = useUser();
+  
+  // Custom hook to automatically create Supabase profile on first sign-in
+  useSyncUser();
 
   const isAuthRoute = location.pathname === '/login' || location.pathname.startsWith('/register') || location.pathname === '/';
   
