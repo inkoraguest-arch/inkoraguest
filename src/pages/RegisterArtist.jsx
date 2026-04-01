@@ -13,13 +13,13 @@ export function RegisterArtist() {
     // Limits based on plan
     const profile = user?.publicMetadata;
     const planLimits = {
-        'free': 10,
+        'free': 3,
         'mochileiro': 15,
         'viajante': 50,
         'pro': 100,
         'estudio': 200
     };
-    const maxPhotos = planLimits[profile?.subscription_plan] || 10;
+    const maxPhotos = planLimits[profile?.subscription_plan] || 3;
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [name, setName] = useState('');
@@ -184,7 +184,7 @@ export function RegisterArtist() {
                     <p className="auth-subtitle" style={{ fontSize: '12px', marginTop: '-4px' }}>
                         {profile?.subscription_plan && profile.subscription_plan !== 'free' 
                           ? `Benefício do plano ${profile.subscription_plan} ativo.` 
-                          : 'Plano gratuito limitado a 10 fotos.'}
+                          : 'Plano gratuito limitado a 3 fotos.'}
                     </p>
 
                     <div className="photo-grid-upload">
