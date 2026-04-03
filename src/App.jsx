@@ -19,8 +19,35 @@ import { ExploreJobs } from './pages/ExploreJobs';
 import { ManageJobs } from './pages/ManageJobs';
 import { JobApplications } from './pages/JobApplications';
 
+// Error Boundary Component to catch fatal React crashes
+import React from 'react';
+class ErrorBoundary extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { hasError: false, error: null };
+  }
+  static getDerivedStateFromError(error) {
+    return { hasError: true, error };
+  }
+  render() {
+    if (this.state.hasError) {
+      return (
+        <div style={{ background: '#000', color: '#E52020', padding: '20px', height: '100vh', overflow: 'auto' }}>
+          <h2>Erro Fatal Detectado ❌</h2>
+          <pre>{this.state.error?.toString()}</pre>
+          <p>Tente recarregar a página ou entre em contato com o suporte.</p>
+          <button onClick={() => window.location.reload()}>Recarregar Site</button>
+        </div>
+      );
+    }
+    return this.props.children;
+  }
+}
+
 // Protected Route Component (Clerk version)
 const ProtectedRoute = ({ children, allowedRoles }) => {
+  const { user, isLoaded } = useUser();
+  
   if (!isLoaded) return (
     <div style={{ background: '#000', height: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#E52020', fontWeight: 'bold' }}>
       Carregando Inkora...
@@ -154,9 +181,13 @@ function AppContent() {
 function App() {
   return (
     <Router>
-      <div className="container">
-        <AppContent />
-      </div>
+      <ErrorBoundary>
+        <AuthProvider>
+          <div className="container">
+            <AppContent />
+          </div>
+        </AuthProvider>
+      </ErrorBoundary>
     </Router>
   );
 }
