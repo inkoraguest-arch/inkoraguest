@@ -211,8 +211,10 @@ export function ArtistProfile() {
             const stylesArray = editForm.styles.split(',').map(s => s.trim()).filter(s => s);
 
             // Determine which table to upsert to
-            const table = profile.role === 'artist' ? 'artists' : 'studios';
-            const dataToUpsert = profile.role === 'artist' ? {
+            const isStudio = profile.role === 'studio' || localStorage.getItem('inkoraRole') === 'studio';
+            const table = isStudio ? 'studios' : 'artists';
+            
+            const dataToUpsert = !isStudio ? {
                 profile_id: profile.id,
                 bio: editForm.bio,
                 primary_styles: stylesArray,
