@@ -14,6 +14,7 @@ export function HomeArtist() {
     const [posts, setPosts] = useState([]);
     const [loading, setLoading] = useState(true);
     const [newPostContent, setNewPostContent] = useState('');
+    const [newPostImage, setNewPostImage] = useState(null);
     const [posting, setPosting] = useState(false);
     const [openJobsCount, setOpenJobsCount] = useState(0);
     const role = profile?.role || localStorage.getItem('inkoraRole') || 'artist';
