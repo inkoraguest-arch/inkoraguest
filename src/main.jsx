@@ -13,9 +13,14 @@ if (!PUBLISHABLE_KEY) {
   throw new Error("Missing Publishable Key")
 }
 
+console.log('[Inkora Boot] Inicializando main.jsx');
 const isProd = PUBLISHABLE_KEY.startsWith('pk_live_');
+console.log('[Inkora Boot] Produção detectada:', isProd);
 
-createRoot(document.getElementById('root')).render(
+const root = createRoot(document.getElementById('root'));
+console.log('[Inkora Boot] Root do React criado');
+
+root.render(
   <StrictMode>
     <ClerkProvider 
       publishableKey={PUBLISHABLE_KEY} 
@@ -29,3 +34,4 @@ createRoot(document.getElementById('root')).render(
     </ClerkProvider>
   </StrictMode>,
 )
+console.log('[Inkora Boot] Renderização disparada');

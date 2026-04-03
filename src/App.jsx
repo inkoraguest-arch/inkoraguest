@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, useLocation, Navigate } from 'react-router-dom';
 import { SignedIn, SignedOut, RedirectToSignIn, useUser } from '@clerk/clerk-react';
 import { LandingPage } from './pages/LandingPage';
@@ -18,25 +18,28 @@ import { PaymentSuccess } from './pages/PaymentSuccess';
 import { ExploreJobs } from './pages/ExploreJobs';
 import { ManageJobs } from './pages/ManageJobs';
 import { JobApplications } from './pages/JobApplications';
+import { AuthProvider } from './lib/AuthContext';
+
+console.log('[Inkora Boot] Arquivo App.jsx carregado');
 
 // Error Boundary Component to catch fatal React crashes
-import React from 'react';
 class ErrorBoundary extends React.Component {
   constructor(props) {
     super(props);
     this.state = { hasError: false, error: null };
   }
   static getDerivedStateFromError(error) {
+    console.error('[Inkora Fatal Error]', error);
     return { hasError: true, error };
   }
   render() {
     if (this.state.hasError) {
       return (
-        <div style={{ background: '#000', color: '#E52020', padding: '20px', height: '100vh', overflow: 'auto' }}>
+        <div style={{ background: '#000', color: '#E52020', padding: '20px', height: '100vh', overflow: 'auto', textAlign: 'center' }}>
           <h2>Erro Fatal Detectado ❌</h2>
-          <pre>{this.state.error?.toString()}</pre>
-          <p>Tente recarregar a página ou entre em contato com o suporte.</p>
-          <button onClick={() => window.location.reload()}>Recarregar Site</button>
+          <pre style={{ background: '#111', padding: '10px', borderRadius: '4px' }}>{this.state.error?.toString()}</pre>
+          <p>Se o erro persistir, nos avise!</p>
+          <button onClick={() => window.location.reload()} style={{ padding: '10px 20px', background: '#E52020', color: '#fff', border: 'none', borderRadius: '4px' }}>Recarregar Site</button>
         </div>
       );
     }
@@ -47,10 +50,11 @@ class ErrorBoundary extends React.Component {
 // Protected Route Component (Clerk version)
 const ProtectedRoute = ({ children, allowedRoles }) => {
   const { user, isLoaded } = useUser();
-  
+  console.log('[Inkora Auth] ProtectedRoute - isLoaded:', isLoaded);
+
   if (!isLoaded) return (
     <div style={{ background: '#000', height: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#E52020', fontWeight: 'bold' }}>
-      Carregando Inkora...
+      Carregando Segurança...
     </div>
   );
 
