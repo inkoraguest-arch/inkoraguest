@@ -4,7 +4,10 @@ import { ClerkProvider } from '@clerk/clerk-react'
 import './index.css'
 import App from './App.jsx'
 
-const PUBLISHABLE_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY
+// Hardcoded production key as fallback to avoid Vercel env sync delays
+const PUBLISHABLE_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY?.startsWith('pk_live_') 
+    ? import.meta.env.VITE_CLERK_PUBLISHABLE_KEY 
+    : 'pk_live_Y2xlcmsuaW5rb3JhZ3Vlc3QuY29tJA';
 
 if (!PUBLISHABLE_KEY) {
   throw new Error("Missing Publishable Key")
