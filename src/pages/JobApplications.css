@@ -1,0 +1,199 @@
+.job-applications-page {
+    min-height: 100vh;
+    background: var(--background);
+    padding-bottom: 40px;
+}
+
+.job-applications-page .manage-header {
+    display: flex;
+    align-items: center;
+    padding: 20px;
+    gap: 16px;
+    position: sticky;
+    top: 0;
+    background-color: var(--background);
+    z-index: 100;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.job-title-badge {
+    background: var(--bg-tertiary);
+    color: var(--text-tertiary);
+    font-size: 11px;
+    padding: 2px 8px;
+    border-radius: 6px;
+    margin-top: 2px;
+    display: inline-block;
+}
+
+.applications-content {
+    padding: 20px;
+}
+
+.application-card {
+    background: var(--surface);
+    border: 1px solid var(--border-color);
+    border-radius: 20px;
+    padding: 20px;
+    margin-bottom: 16px;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.2s;
+}
+
+.application-card.accepted {
+    border-color: #4CAF50;
+    box-shadow: 0 0 10px rgba(76, 175, 80, 0.1);
+}
+
+.application-card.rejected {
+    opacity: 0.7;
+}
+
+.card-top {
+    display: flex;
+     justify-content: space-between;
+     align-items: flex-start;
+     margin-bottom: 20px;
+}
+
+.artist-profile-summary {
+    display: flex;
+    gap: 12px;
+}
+
+.artist-avatar {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid var(--border-color);
+}
+
+.artist-meta h3 {
+    font-size: 16px;
+    font-weight: 700;
+}
+
+.artist-meta span {
+    font-size: 13px;
+    color: var(--text-tertiary);
+}
+
+.status-pill {
+    font-size: 10px;
+    font-weight: 800;
+    text-transform: uppercase;
+    padding: 4px 10px;
+    border-radius: 10px;
+}
+
+.status-pill.pending { background: rgba(255, 152, 0, 0.1); color: #FF9800; }
+.status-pill.accepted { background: rgba(76, 175, 80, 0.1); color: #4CAF50; }
+.status-pill.rejected { background: rgba(244, 67, 54, 0.1); color: #F44336; }
+
+.application-msg {
+    background-color: var(--background);
+    padding: 16px;
+    border-radius: 12px;
+    margin-bottom: 20px;
+    position: relative;
+}
+
+.application-msg p {
+    font-size: 14px;
+    color: var(--text-secondary);
+    line-height: 1.5;
+    margin-bottom: 8px;
+    font-style: italic;
+}
+
+.app-date {
+    font-size: 9px;
+    color: var(--text-tertiary);
+    text-transform: uppercase;
+    font-weight: 700;
+}
+
+.card-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.btn-view-profile {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: none;
+    border: none;
+    color: var(--primary);
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    padding: 0;
+}
+
+.btn-view-profile:hover {
+    text-decoration: underline;
+}
+
+.decision-btns {
+    display: flex;
+    gap: 12px;
+}
+
+.btn-reject {
+    background: var(--bg-tertiary);
+    border: 1px solid var(--border-color);
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-tertiary);
+    cursor: pointer;
+}
+
+.btn-reject:hover {
+    color: #F44336;
+    border-color: #F44336;
+}
+
+.btn-accept {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 8px 20px;
+    border-radius: 12px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.btn-accept:hover {
+    transform: scale(1.05);
+}
+
+.loading-state {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    padding: 60px;
+    color: var(--text-tertiary);
+}
+
+.empty-applications {
+    padding: 80px 20px;
+    text-align: center;
+    color: var(--text-tertiary);
+}
+
+.empty-applications p {
+    margin: 20px 0 30px;
+}

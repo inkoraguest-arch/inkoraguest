@@ -1,11 +1,12 @@
 import { createContext, useContext, useEffect, useState } from 'react';
-import { supabase } from './supabase';
+import { useUser, useAuth as useClerkAuth } from '@clerk/clerk-react';
+import { supabase, createClerkSupabaseClient } from './supabase';
 
 const AuthContext = createContext({});
 
 export const AuthProvider = ({ children }) => {
-    const [user, setUser] = useState(null);
-    const [session, setSession] = useState(null);
+    const { user: clerkUser, isLoaded: clerkLoaded } = useUser();
+    const { getToken } = useClerkAuth();
     const [profile, setProfile] = useState(null);
     const [loading, setLoading] = useState(true);
 
@@ -15,6 +16,8 @@ export const AuthProvider = ({ children }) => {
             return;
         }
 
+        // Use the default supabase client to check for profile
+        // (If RLS is on for public reading, this works, otherwise we might need a token)
         const { data, error } = await supabase
             .from('profiles')
             .select('*')
@@ -26,43 +29,37 @@ export const AuthProvider = ({ children }) => {
         }
     };
 
+    /**
+     * Helper to get a supabase client authenticated with the current Clerk user.
+     * This is useful for writing data that requires RLS.
+     */
+    const getSupabase = async () => {
+        const token = await getToken({ template: 'supabase' });
+        return createClerkSupabaseClient(token);
+    };
+
     useEffect(() => {
-        // Check active session on mount
-        supabase.auth.getSession().then(({ data: { session } }) => {
-            setSession(session);
-            setUser(session?.user ?? null);
-            if (session?.user) {
-                fetchProfile(session.user.id).then(() => setLoading(false));
+        if (clerkLoaded) {
+            if (clerkUser) {
+                fetchProfile(clerkUser.id).then(() => setLoading(false));
             } else {
+                setProfile(null);
                 setLoading(false);
             }
-        });
-
-        // Listen for changes
-        const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-            setSession(session);
-            setUser(session?.user ?? null);
-            if (session?.user) {
-                fetchProfile(session.user.id).then(() => setLoading(false));
-            } else {
-                setLoading(false);
-            }
-        });
-
-        return () => subscription.unsubscribe();
-    }, []);
+        }
+    }, [clerkUser, clerkLoaded]);
 
     const value = {
-        session,
-        user,
+        user: clerkUser,
         profile,
-        loading,
-        signOut: () => supabase.auth.signOut(),
+        loading: !clerkLoaded || loading,
+        getSupabase,
+        signOut: () => {}, // Handled by Clerk components or Clerk's useClerk
     };
 
     return (
         <AuthContext.Provider value={value}>
-            {!loading && children}
+            {children}
         </AuthContext.Provider>
     );
 };

@@ -19,8 +19,11 @@ export function useSyncUser() {
         if (selectError || !profile) {
           console.log('[Inkora Sync] Creating new profile for Clerk user:', user.id);
           
-          // Get role from Clerk metadata or default to 'client'
-          const role = user.publicMetadata?.role || localStorage.getItem('inkoraRole') || 'client';
+          // Get role from Clerk metadata (public or unsafe) or default to 'client'
+          const role = user.publicMetadata?.role || 
+                       user.unsafeMetadata?.role || 
+                       localStorage.getItem('inkoraRole') || 
+                       'client';
           
           const { error: insertError } = await supabase
             .from('profiles')

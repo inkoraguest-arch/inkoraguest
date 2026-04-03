@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { TopBar } from '../components/TopBar';
 import { FeedPost } from '../components/FeedPost';
-import { Store, Palmtree, Loader, Send, User } from 'lucide-react';
+import { Store, Palmtree, Loader, Send, User, Briefcase } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 import { useUser } from '@clerk/clerk-react';
@@ -14,11 +14,14 @@ export function HomeArtist() {
     const [posts, setPosts] = useState([]);
     const [loading, setLoading] = useState(true);
     const [newPostContent, setNewPostContent] = useState('');
-    const [newPostImage, setNewPostImage] = useState(null);
     const [posting, setPosting] = useState(false);
+    const [openJobsCount, setOpenJobsCount] = useState(0);
+    const role = profile?.role || localStorage.getItem('inkoraRole') || 'artist';
+    const isStudio = role === 'studio';
 
     useEffect(() => {
         fetchPosts();
+        fetchOpenJobsCount();
     }, []);
 
     const fetchPosts = async () => {
@@ -32,7 +35,10 @@ export function HomeArtist() {
                     author_id,
                     coupon_code,
                     created_at,
+                    rating,
+                    tagged_profile_id,
                     profiles:author_id (full_name, avatar_url),
+                    tagged_profile:tagged_profile_id (full_name),
                     post_likes!left (id),
                     post_comments!left (id)
                 `)
@@ -61,7 +67,9 @@ export function HomeArtist() {
                         likes: likesCount,
                         comments_count: commentsCount,
                         coupon: post.coupon_code,
-                        media: post.media_url
+                        media: post.media_url,
+                        rating: post.rating,
+                        tagged_artist: post.tagged_profile ? { name: post.tagged_profile.full_name } : null
                     };
                 });
                 setPosts(mappedPosts);
@@ -73,6 +81,19 @@ export function HomeArtist() {
             setPosts([]);
         } finally {
             setLoading(false);
+        }
+    };
+
+    const fetchOpenJobsCount = async () => {
+        try {
+            const { count, error } = await supabase
+                .from('guest_jobs')
+                .select('*', { count: 'exact', head: true })
+                .eq('status', 'open');
+
+            if (count !== null) setOpenJobsCount(count);
+        } catch (error) {
+            console.error('Error fetching jobs count:', error);
         }
     };
 
@@ -137,16 +158,26 @@ export function HomeArtist() {
             <TopBar />
 
             <div className="artist-opportunities">
-                <h2 className="section-title">Explorar na Comunidade</h2>
+                <h2 className="section-title">{isStudio ? 'Gestão do Estúdio' : 'Explorar na Comunidade'}</h2>
                 <div className="opp-cards">
-                    <div className="opp-card studio-opp" onClick={() => navigate('/search')}>
-                        <Store size={24} className="opp-icon" />
-                        <div className="opp-text">
-                            <h4>Estúdios com Vagas</h4>
-                            <p>4 locais aceitando Guest perto de você</p>
+                    {isStudio ? (
+                        <div className="opp-card studio-opp" onClick={() => navigate('/jobs/manage')}>
+                            <Briefcase size={24} className="opp-icon" />
+                            <div className="opp-text">
+                                <h4>Gerenciar Vagas</h4>
+                                <p>Crie novos anúncios e receba candidatos</p>
+                            </div>
                         </div>
-                    </div>
-                    <div className="opp-card shop-opp" style={{ border: '1px solid var(--primary)', background: 'rgba(229, 32, 32, 0.05)' }} onClick={() => navigate(`/artist/${profile?.id}`)}>
+                    ) : (
+                        <div className="opp-card studio-opp" onClick={() => navigate('/jobs/explore')}>
+                            <Store size={24} className="opp-icon" />
+                            <div className="opp-text">
+                                <h4>Estúdios com Vagas</h4>
+                                <p>{openJobsCount} locais aceitando Guest perto de você</p>
+                            </div>
+                        </div>
+                    )}
+                    <div className="opp-card shop-opp" style={{ border: '1px solid var(--primary)', background: 'rgba(229, 32, 32, 0.05)' }} onClick={() => navigate(`/artist/${user?.id}`)}>
                         <User size={24} className="opp-icon" style={{ color: 'var(--primary)' }} />
                         <div className="opp-text">
                             <h4>Seu Perfil & Agenda</h4>

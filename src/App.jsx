@@ -9,15 +9,15 @@ import { ArtistProfile } from './pages/ArtistProfile';
 import { ClientProfile } from './pages/ClientProfile';
 import { Login } from './pages/Login';
 import { RegisterRole } from './pages/RegisterRole';
-import { RegisterClient } from './pages/RegisterClient';
-import { RegisterArtist } from './pages/RegisterArtist';
-import { RegisterStudio } from './pages/RegisterStudio';
 import { SearchClient } from './pages/SearchClient';
 import { AdminDashboard } from './pages/AdminDashboard';
 import { Pricing } from './pages/Pricing';
 import { BottomNav } from './components/BottomNav';
 import { useSyncUser } from './lib/useSyncUser';
 import { PaymentSuccess } from './pages/PaymentSuccess';
+import { ExploreJobs } from './pages/ExploreJobs';
+import { ManageJobs } from './pages/ManageJobs';
+import { JobApplications } from './pages/JobApplications';
 
 // Protected Route Component (Clerk version)
 const ProtectedRoute = ({ children, allowedRoles }) => {
@@ -66,9 +66,6 @@ function AppContent() {
         {/* Auth Routes */}
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<RegisterRole />} />
-        <Route path="/register/client" element={<RegisterClient />} />
-        <Route path="/register/artist" element={<RegisterArtist />} />
-        <Route path="/register/studio" element={<RegisterStudio />} />
 
         {/* Main Interface Routes (Protected) */}
         <Route 
@@ -103,6 +100,32 @@ function AppContent() {
           element={
             <SignedIn>
               <ClientProfile />
+            </SignedIn>
+          } 
+        />
+
+        {/* Guest Jobs Routes */}
+        <Route 
+          path="/jobs/explore" 
+          element={
+            <SignedIn>
+              <ExploreJobs />
+            </SignedIn>
+          } 
+        />
+        <Route 
+          path="/jobs/manage" 
+          element={
+            <SignedIn>
+              <ManageJobs />
+            </SignedIn>
+          } 
+        />
+        <Route 
+          path="/jobs/applications/:id" 
+          element={
+            <SignedIn>
+              <JobApplications />
             </SignedIn>
           } 
         />

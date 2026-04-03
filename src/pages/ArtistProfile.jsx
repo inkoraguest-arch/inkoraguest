@@ -46,10 +46,12 @@ export function ArtistProfile() {
         start_date: '',
         end_date: ''
     });
+    const [products, setProducts] = useState([]);
 
     useEffect(() => {
         fetchArtist();
         fetchGuestSpots();
+        fetchProducts();
     }, [id]);
 
     const fetchGuestSpots = async () => {
@@ -63,6 +65,20 @@ export function ArtistProfile() {
             if (data) setGuestSpots(data);
         } catch (e) {
             console.error("Error fetching guest spots", e);
+        }
+    };
+
+    const fetchProducts = async () => {
+        try {
+            const { data, error } = await supabase
+                .from('products')
+                .select('*')
+                .eq('seller_id', id)
+                .order('created_at', { ascending: false });
+
+            if (data) setProducts(data);
+        } catch (e) {
+            console.error("Error fetching products", e);
         }
     };
 
@@ -172,6 +188,19 @@ export function ArtistProfile() {
         }
 
         const message = encodeURIComponent(`Olá ${artist.name}, gostei muito do seu portfólio no app Inkora e gostaria de solicitar um orçamento para uma tatuagem${slotInfo}!`);
+        window.open(`https://wa.me/${phone}?text=${message}`, '_blank');
+    };
+
+    const handleProductClick = (product) => {
+        if (!artist) return;
+        const phone = artist.phone ? artist.phone.replace(/\D/g, '') : '5511999999999';
+        
+        if (artist.pixKey && artist.pixKey.trim() !== '') {
+            navigator.clipboard.writeText(artist.pixKey).catch(() => {});
+            alert(`Reserva de Produto: ${product.title}\n\nValor: R$ ${product.price}\nChave PIX: ${artist.pixKey}\n(Copiamos para você!)\n\nVamos ao WhatsApp para concluir a reserva.`);
+        }
+
+        const message = encodeURIComponent(`Olá ${artist.name}, tenho interesse no seu produto "${product.title}" (R$ ${product.price}) que vi no seu perfil do Inkora!`);
         window.open(`https://wa.me/${phone}?text=${message}`, '_blank');
     };
 
@@ -795,6 +824,56 @@ export function ArtistProfile() {
                     onDeletePhoto={handleDeletePhoto}
                 />
             </div>
+
+            {products.length > 0 && (
+                <div className="portfolio-section" style={{ borderTop: '1px solid var(--border-color)', paddingTop: '24px', marginTop: '24px' }}>
+                    <div style={{ padding: '0 20px', marginBottom: '16px' }}>
+                        <h2 className="section-title" style={{ padding: 0, margin: 0 }}>Flashes & Vitrine</h2>
+                        <p style={{ fontSize: '12px', color: 'var(--text-tertiary)', marginTop: '4px' }}>Produtos e artes exclusivas à venda</p>
+                    </div>
+                    
+                    <div className="products-grid-profile" style={{ 
+                        display: 'grid', 
+                        gridTemplateColumns: 'repeat(2, 1fr)', 
+                        gap: '12px', 
+                        padding: '0 20px' 
+                    }}>
+                        {products.map(product => (
+                            <div 
+                                key={product.id} 
+                                className="product-card-mini" 
+                                onClick={() => handleProductClick(product)}
+                                style={{
+                                    background: 'var(--surface)',
+                                    borderRadius: '16px',
+                                    border: '1px solid var(--border-color)',
+                                    overflow: 'hidden',
+                                    cursor: 'pointer'
+                                }}
+                            >
+                                <div style={{ aspectRatio: '1', width: '100%', position: 'relative' }}>
+                                    <img 
+                                        src={product.image_url || 'https://via.placeholder.com/150'} 
+                                        alt={product.title} 
+                                        style={{ width: '100%', height: '100%', objectFit: 'cover' }} 
+                                    />
+                                    <div style={{ 
+                                        position: 'absolute', bottom: '8px', right: '8px', 
+                                        background: 'rgba(0,0,0,0.7)', padding: '4px 8px', 
+                                        borderRadius: '8px', color: 'white', fontSize: '12px', fontWeight: 'bold' 
+                                    }}>
+                                        R$ {product.price}
+                                    </div>
+                                </div>
+                                <div style={{ padding: '10px' }}>
+                                    <h4 style={{ fontSize: '13px', fontWeight: 'bold', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{product.title}</h4>
+                                    <p style={{ fontSize: '11px', color: 'var(--text-tertiary)', marginTop: '2px' }}>Reservar Flash</p>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            )}
 
             <div className="cta-container">
                 <Button fullWidth variant="primary" icon={MessageCircle} onClick={handleWhatsAppClick}>

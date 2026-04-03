@@ -3,7 +3,8 @@ import { TopBar } from '../components/TopBar';
 import { ArtistCard } from '../components/ArtistCard';
 import { FeedPost } from '../components/FeedPost';
 import { QuizModal } from '../components/QuizModal';
-import { Sparkles, Loader, Sparkles as MagicWand } from 'lucide-react';
+import { Sparkles, Loader, Sparkles as MagicWand, Star, Camera, Send, X } from 'lucide-react';
+import { useUser } from '@clerk/clerk-react';
 import { supabase } from '../lib/supabase';
 import { generateStyleMatch } from '../lib/gemini';
 import { MOCK_ARTISTS } from '../data/mockData';
@@ -18,7 +19,16 @@ export function Home() {
     const [aiLoading, setAiLoading] = useState(false);
     const [aiResult, setAiResult] = useState(null);
 
+    const { user } = useUser();
     const [searchQuery, setSearchQuery] = useState('');
+
+    // Review Form State
+    const [isReviewFormOpen, setIsReviewFormOpen] = useState(false);
+    const [reviewContent, setReviewContent] = useState('');
+    const [reviewRating, setReviewRating] = useState(5);
+    const [reviewArtistId, setReviewArtistId] = useState('');
+    const [reviewImage, setReviewImage] = useState(null);
+    const [reviewPosting, setReviewPosting] = useState(false);
 
     useEffect(() => {
         fetchArtists();
@@ -50,7 +60,10 @@ export function Home() {
                     author_id,
                     coupon_code,
                     created_at,
+                    rating,
+                    tagged_profile_id,
                     profiles:author_id (full_name, avatar_url),
+                    tagged_profile:tagged_profile_id (full_name),
                     post_likes!left (id),
                     post_comments!left (id)
                 `)
@@ -75,7 +88,9 @@ export function Home() {
                         likes: post.post_likes?.length || 0,
                         comments_count: post.post_comments?.length || 0,
                         coupon: post.coupon_code,
-                        media: post.media_url
+                        media: post.media_url,
+                        rating: post.rating,
+                        tagged_artist: post.tagged_profile ? { name: post.tagged_profile.full_name } : null
                     };
                 });
                 setPosts(mappedPosts);
@@ -198,12 +213,189 @@ export function Home() {
         setAiLoading(false);
     };
 
+    const handleImageUpload = async (e) => {
+        const file = e.target.files?.[0];
+        if (!file || !user) return;
+
+        const fileExt = file.name.split('.').pop();
+        const fileName = `${user.id}/review_${Date.now()}.${fileExt}`;
+
+        try {
+            const { error: uploadError } = await supabase.storage
+                .from('portfolios')
+                .upload(fileName, file);
+
+            if (!uploadError) {
+                const { data: { publicUrl } } = supabase.storage.from('portfolios').getPublicUrl(fileName);
+                setReviewImage(publicUrl);
+            }
+        } catch (error) {
+            console.error("Error uploading image", error);
+        }
+    };
+
+    const handleCreateReview = async () => {
+        if (!reviewContent.trim() || !reviewImage || !reviewArtistId || !user) {
+            alert('Por favor, preencha todos os campos (Imagem, Artista e Comentário).');
+            return;
+        }
+
+        setReviewPosting(true);
+        try {
+            const { error } = await supabase
+                .from('posts')
+                .insert([
+                    {
+                        author_id: user.id,
+                        content: reviewContent.trim(),
+                        media_url: reviewImage,
+                        rating: reviewRating,
+                        tagged_profile_id: reviewArtistId
+                    }
+                ]);
+
+            if (error) throw error;
+
+            setReviewContent('');
+            setReviewImage(null);
+            setReviewArtistId('');
+            setReviewRating(5);
+            setIsReviewFormOpen(false);
+            fetchPosts(); // Refresh feed
+            alert('Avaliação publicada com sucesso! ✨');
+        } catch (error) {
+            console.error('Error creating review:', error);
+            alert('Erro ao publicar avaliação.');
+        } finally {
+            setReviewPosting(false);
+        }
+    };
+
     return (
         <div className="home-page">
             <TopBar />
 
             {!aiResult && !aiLoading && (
-                <div className="quiz-banner-container">
+                <div className="discovery-section" style={{ paddingBottom: 0 }}>
+                    <div className="review-prompt-card" onClick={() => setIsReviewFormOpen(true)} style={{
+                        background: 'var(--surface)', padding: '16px', borderRadius: '16px',
+                        border: '1px solid var(--border-color)', cursor: 'pointer',
+                        display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '16px'
+                    }}>
+                        <div style={{
+                            width: '40px', height: '40px', borderRadius: '50%',
+                            background: 'var(--primary)', display: 'flex', justifyContent: 'center', alignItems: 'center', color: 'white'
+                        }}>
+                            <Star size={20} fill="currentColor" />
+                        </div>
+                        <div>
+                            <h4 style={{ fontSize: '14px', fontWeight: 'bold' }}>Fez uma tattoo nova?</h4>
+                            <p style={{ fontSize: '12px', color: 'var(--text-secondary)' }}>Compartilhe sua experiência e avalie o artista!</p>
+                        </div>
+                    </div>
+
+                    {isReviewFormOpen && (
+                        <div className="review-form-overlay" style={{
+                            background: 'var(--surface)', padding: '20px', borderRadius: '20px',
+                            border: '2px solid var(--primary)', marginBottom: '24px',
+                            display: 'flex', flexDirection: 'column', gap: '16px'
+                        }}>
+                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                <h3 style={{ fontSize: '16px', fontWeight: 'bold' }}>Avaliar Tatuagem</h3>
+                                <button onClick={() => setIsReviewFormOpen(false)} style={{ background: 'transparent', border: 'none', color: 'var(--text-tertiary)' }}>
+                                    <X size={20} />
+                                </button>
+                            </div>
+
+                            <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                                <div style={{ display: 'flex', gap: '12px', alignItems: 'flex-start' }}>
+                                    <div style={{ flex: 1 }}>
+                                        <label style={{ fontSize: '12px', color: 'var(--text-secondary)', marginBottom: '4px', display: 'block' }}>Escolha o Artista</label>
+                                        <select
+                                            value={reviewArtistId}
+                                            onChange={(e) => setReviewArtistId(e.target.value)}
+                                            style={{
+                                                width: '100%', padding: '10px', borderRadius: '8px',
+                                                background: 'var(--bg-tertiary)', border: '1px solid var(--border-color)', color: 'white'
+                                            }}
+                                        >
+                                            <option value="">Selecionar Artista...</option>
+                                            {artists.map(art => (
+                                                <option key={art.id} value={art.id}>{art.name}</option>
+                                            ))}
+                                        </select>
+                                    </div>
+                                    <div style={{ width: '100px' }}>
+                                        <label style={{ fontSize: '12px', color: 'var(--text-secondary)', marginBottom: '4px', display: 'block' }}>Sua Nota</label>
+                                        <div style={{ display: 'flex', gap: '2px' }}>
+                                            {[1, 2, 3, 4, 5].map(star => (
+                                                <Star
+                                                    key={star}
+                                                    size={16}
+                                                    fill={star <= reviewRating ? "var(--primary)" : "transparent"}
+                                                    color={star <= reviewRating ? "var(--primary)" : "var(--text-tertiary)"}
+                                                    style={{ cursor: 'pointer' }}
+                                                    onClick={() => setReviewRating(star)}
+                                                />
+                                            ))}
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <label style={{ fontSize: '12px', color: 'var(--text-secondary)', marginBottom: '4px', display: 'block' }}>Sua Foto (Obrigatório)</label>
+                                    {reviewImage ? (
+                                        <div style={{ position: 'relative', width: 'fit-content' }}>
+                                            <img src={reviewImage} alt="Review preview" style={{ height: '100px', borderRadius: '12px', objectFit: 'cover' }} />
+                                            <button onClick={() => setReviewImage(null)} style={{ position: 'absolute', top: '-8px', right: '-8px', background: 'var(--bg-tertiary)', color: 'white', borderRadius: '50%', width: '24px', height: '24px', border: 'none', cursor: 'pointer' }}>×</button>
+                                        </div>
+                                    ) : (
+                                        <div style={{ position: 'relative' }}>
+                                            <div style={{
+                                                width: '100%', height: '100px', borderRadius: '12px',
+                                                border: '2px dashed var(--border-color)', display: 'flex',
+                                                flexDirection: 'column', justifyContent: 'center', alignItems: 'center',
+                                                color: 'var(--text-tertiary)', gap: '8px'
+                                            }}>
+                                                <Camera size={24} />
+                                                <span style={{ fontSize: '11px' }}>Carregar Foto</span>
+                                            </div>
+                                            <input type="file" accept="image/*" onChange={handleImageUpload} style={{ position: 'absolute', inset: 0, opacity: 0, cursor: 'pointer' }} />
+                                        </div>
+                                    )}
+                                </div>
+
+                                <div>
+                                    <label style={{ fontSize: '12px', color: 'var(--text-secondary)', marginBottom: '4px', display: 'block' }}>Conte como foi o atendimento...</label>
+                                    <textarea
+                                        value={reviewContent}
+                                        onChange={(e) => setReviewContent(e.target.value)}
+                                        placeholder="O traço ficou ótimo! O estúdio é muito limpo..."
+                                        rows="3"
+                                        style={{
+                                            width: '100%', padding: '12px', borderRadius: '12px',
+                                            background: 'var(--bg-tertiary)', border: '1px solid var(--border-color)',
+                                            color: 'white', resize: 'vertical'
+                                        }}
+                                    />
+                                </div>
+
+                                <button
+                                    onClick={handleCreateReview}
+                                    disabled={reviewPosting}
+                                    style={{
+                                        width: '100%', padding: '12px', borderRadius: '12px',
+                                        background: 'var(--primary)', color: 'white', border: 'none',
+                                        fontWeight: 'bold', display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '8px'
+                                    }}
+                                >
+                                    {reviewPosting ? <Loader className="spin" size={18} /> : <Send size={18} />}
+                                    Publicar Avaliação
+                                </button>
+                            </div>
+                        </div>
+                    )}
+
                     <div className="quiz-banner" onClick={() => setIsQuizOpen(true)}>
                         <div className="quiz-banner-content">
                             <h3>Descubra seu Artista Ideal</h3>

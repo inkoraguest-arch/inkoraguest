@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Heart, MessageCircle, Share2, Tag, Send, Loader } from 'lucide-react';
+import { Heart, MessageCircle, Share2, Tag, Send, Loader, Star, User } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import { useAuth } from '../lib/AuthContext';
 import './FeedPost.css';
@@ -147,8 +147,29 @@ export function FeedPost({ post }) {
                     </div>
                 )}
                 <div className="post-author-info">
-                    <h4 className="post-author-name">{post.author.name}</h4>
-                    <span className="post-time">{post.timeAgo}</span>
+                    <h4 className="post-author-name">
+                        {post.author.name}
+                        {post.tagged_artist && (
+                            <span style={{ fontWeight: 'normal', color: 'var(--text-tertiary)', fontSize: '13px', marginLeft: '6px' }}>
+                                avaliou <strong style={{ color: 'var(--primary)' }}>{post.tagged_artist.name}</strong>
+                            </span>
+                        )}
+                    </h4>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                        <span className="post-time">{post.timeAgo}</span>
+                        {post.rating && (
+                            <div style={{ display: 'flex', gap: '2px' }}>
+                                {[1, 2, 3, 4, 5].map(star => (
+                                    <Star 
+                                        key={star} 
+                                        size={12} 
+                                        fill={star <= post.rating ? "var(--primary)" : "transparent"} 
+                                        color={star <= post.rating ? "var(--primary)" : "var(--text-tertiary)"} 
+                                    />
+                                ))}
+                            </div>
+                        )}
+                    </div>
                 </div>
             </div>
 
