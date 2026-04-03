@@ -160,13 +160,47 @@ export function ManageJobs() {
                                 />
                             </div>
                             <div className="input-group">
-                                <label>Estilos Procurados (separados por vírgula)</label>
-                                <input 
-                                    type="text" 
-                                    placeholder="Ex: Realismo, Blackwork, Fineline" 
-                                    value={newJob.styles_required} 
-                                    onChange={e => setNewJob({...newJob, styles_required: e.target.value})}
-                                />
+                                <label style={{ marginBottom: '8px', display: 'block' }}>Estilos Procurados (Clique para marcar)</label>
+                                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
+                                    {[
+                                        'Realismo', 'Fine Line', 'Old School', 'Blackwork', 'Aquarela', 
+                                        'Tribal', 'Geométrico', 'Pontilhismo', 'Tradicional', 'Sketch', 
+                                        'Lettering', 'Japonês', 'Neo Tradicional'
+                                    ].map(style => {
+                                        const isSelected = newJob.styles_required.split(',').map(s => s.trim()).includes(style);
+                                        return (
+                                            <button
+                                                key={style}
+                                                type="button"
+                                                onClick={() => {
+                                                    const currentStyles = newJob.styles_required.split(',').map(s => s.trim()).filter(Boolean);
+                                                    let newStyles;
+                                                    if (isSelected) {
+                                                        newStyles = currentStyles.filter(s => s !== style);
+                                                    } else {
+                                                        newStyles = [...currentStyles, style];
+                                                    }
+                                                    setNewJob({ ...newJob, styles_required: newStyles.join(', ') });
+                                                }}
+                                                className={`style-chip ${isSelected ? 'selected' : ''}`}
+                                                style={{
+                                                    padding: '6px 12px',
+                                                    borderRadius: '20px',
+                                                    border: '1px solid',
+                                                    borderColor: isSelected ? 'var(--primary)' : 'var(--border-color)',
+                                                    background: isSelected ? 'rgba(229, 32, 32, 0.1)' : 'var(--surface)',
+                                                    color: isSelected ? 'var(--primary)' : 'var(--text-secondary)',
+                                                    fontSize: '12px',
+                                                    cursor: 'pointer',
+                                                    transition: 'all 0.2s',
+                                                    fontWeight: isSelected ? 'bold' : 'normal'
+                                                }}
+                                            >
+                                                {style}
+                                            </button>
+                                        );
+                                    })}
+                                </div>
                             </div>
                         </div>
 

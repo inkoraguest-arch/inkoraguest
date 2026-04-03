@@ -163,3 +163,64 @@
     background: linear-gradient(to top, var(--bg-primary) 80%, transparent);
     z-index: 90;
 }
+
+/* Edit Form Enhancements */
+.style-chips-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 8px;
+}
+
+.style-chip {
+    padding: 6px 14px;
+    border-radius: 20px;
+    border: 1px solid var(--border-color);
+    background: var(--surface);
+    color: var(--text-secondary);
+    font-size: 13px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.style-chip:hover {
+    border-color: var(--primary);
+    color: var(--text-primary);
+}
+
+.style-chip.selected {
+    border-color: var(--primary);
+    background: rgba(229, 32, 32, 0.1);
+    color: var(--primary);
+    font-weight: 600;
+}
+
+.map-edit-container {
+    height: 220px;
+    width: 100%;
+    border-radius: 12px;
+    overflow: hidden;
+    border: 1px solid var(--border-color);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    margin-top: 8px;
+}
+
+.gps-btn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(229, 32, 32, 0.1);
+    color: var(--primary);
+    border: 1px solid rgba(229, 32, 32, 0.2);
+    padding: 6px 12px;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.gps-btn:hover {
+    background: rgba(229, 32, 32, 0.2);
+    transform: translateY(-1px);
+}

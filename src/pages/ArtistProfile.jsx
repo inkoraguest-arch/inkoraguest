@@ -1,12 +1,13 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { MOCK_ARTISTS } from '../data/mockData';
-import { ArrowLeft, MapPin, Star, Share2, MessageCircle, LogOut, Loader } from 'lucide-react';
+import { ArrowLeft, MapPin, Star, Share2, MessageCircle, LogOut, Loader, GpsFixed } from 'lucide-react';
 import { PhotoGrid } from '../components/PhotoGrid';
 import { CalendarManager } from '../components/CalendarManager';
 import { Button } from '../components/Button';
 import { useUser, useClerk } from '@clerk/clerk-react';
 import { supabase } from '../lib/supabase';
+import { GoogleMap, useJsApiLoader, Marker, Autocomplete } from '@react-google-maps/api';
 
 import './ArtistProfile.css';
 
@@ -35,9 +36,21 @@ export function ArtistProfile() {
         schedule_text: '',
         spots_status: '',
         address: '',
+        latitude: null,
+        longitude: null,
+        city: '',
+        state: '',
         pix_key: ''
     });
     const [saving, setSaving] = useState(false);
+    const [mapCenter, setMapCenter] = useState({ lat: -23.5505, lng: -46.6333 });
+    const [autocomplete, setAutocomplete] = useState(null);
+
+    const { isLoaded: isMapLoaded } = useJsApiLoader({
+        id: 'google-map-script',
+        googleMapsApiKey: import.meta.env.VITE_GOOGLE_MAPS_API_KEY,
+        libraries: ['places']
+    });
     const [selectedSlot, setSelectedSlot] = useState(null);
     const [guestSpots, setGuestSpots] = useState([]);
     const [isAddGuestOpen, setIsAddGuestOpen] = useState(false);
@@ -121,7 +134,7 @@ export function ArtistProfile() {
                     id: data.id,
                     role: data.role,
                     name: data.full_name || defaultName,
-                    currentCity: data.city || 'Local indefinido',
+                    currentCity: data.city && data.state ? `${data.city}, ${data.state}` : (data.city || 'Local Indefinido'),
                     phone: data.phone,
                     rating: '5.0',
                     reviews: 0,
@@ -133,6 +146,10 @@ export function ArtistProfile() {
                     profilePic: data.avatar_url || null,
                     portfolioFull: artistData?.portfolio_urls || studioData?.studio_photos || [],
                     address: data.address || '',
+                    latitude: data.latitude,
+                    longitude: data.longitude,
+                    city: data.city,
+                    state: data.state,
                     pixKey: data.pix_key || ''
                 });
 
@@ -144,8 +161,16 @@ export function ArtistProfile() {
                     schedule_text: finalSchedule,
                     spots_status: finalSpots,
                     address: data.address || '',
+                    latitude: data.latitude || null,
+                    longitude: data.longitude || null,
+                    city: data.city || '',
+                    state: data.state || '',
                     pix_key: data.pix_key || ''
                 });
+
+                if (data.latitude && data.longitude) {
+                    setMapCenter({ lat: Number(data.latitude), lng: Number(data.longitude) });
+                }
 
             } else {
                 setArtist(null);
@@ -204,6 +229,71 @@ export function ArtistProfile() {
         window.open(`https://wa.me/${phone}?text=${message}`, '_blank');
     };
 
+    const handleDetectLocation = () => {
+        if (!navigator.geolocation) {
+            alert('Geolocalização não suportada pelo seu navegador.');
+            return;
+        }
+
+        navigator.geolocation.getCurrentPosition(async (position) => {
+            const lat = position.coords.latitude;
+            const lng = position.coords.longitude;
+            setMapCenter({ lat, lng });
+            setEditForm(prev => ({ ...prev, latitude: lat, longitude: lng }));
+
+            // Reverse Geocode
+            try {
+                const response = await fetch(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=${import.meta.env.VITE_GOOGLE_MAPS_API_KEY}`);
+                const data = await response.json();
+                if (data.results && data.results[0]) {
+                    const addr = data.results[0].formatted_address;
+                    let city = '', state = '';
+                    
+                    data.results[0].address_components.forEach(comp => {
+                        if (comp.types.includes('administrative_area_level_2')) city = comp.long_name;
+                        if (comp.types.includes('administrative_area_level_1')) state = comp.short_name;
+                    });
+
+                    setEditForm(prev => ({ 
+                        ...prev, 
+                        address: addr,
+                        city: city,
+                        state: state
+                    }));
+                }
+            } catch (e) {
+                console.error("Reverse geocoding error", e);
+            }
+        });
+    };
+
+    const onPlaceChanged = () => {
+        if (autocomplete) {
+            const place = autocomplete.getPlace();
+            if (place.geometry) {
+                const lat = place.geometry.location.lat();
+                const lng = place.geometry.location.lng();
+                const addr = place.formatted_address;
+                
+                let city = '', state = '';
+                place.address_components.forEach(comp => {
+                    if (comp.types.includes('administrative_area_level_2')) city = comp.long_name;
+                    if (comp.types.includes('administrative_area_level_1')) state = comp.short_name;
+                });
+
+                setMapCenter({ lat, lng });
+                setEditForm(prev => ({
+                    ...prev,
+                    address: addr,
+                    latitude: lat,
+                    longitude: lng,
+                    city: city,
+                    state: state
+                }));
+            }
+        }
+    };
+
     const handleSaveProfile = async () => {
         setSaving(true);
         try {
@@ -239,10 +329,17 @@ export function ArtistProfile() {
                 throw upsertError;
             }
 
-            // Update profiles table for address and pix
+            // Update profiles table for address, coordinates and pix
             const { error: profileError } = await supabase
                 .from('profiles')
-                .update({ address: editForm.address, pix_key: editForm.pix_key })
+                .update({ 
+                    address: editForm.address, 
+                    latitude: editForm.latitude, 
+                    longitude: editForm.longitude,
+                    city: editForm.city,
+                    state: editForm.state,
+                    pix_key: editForm.pix_key 
+                })
                 .eq('id', profile.id);
 
             if (profileError) throw profileError;
@@ -256,6 +353,10 @@ export function ArtistProfile() {
                 scheduleText: editForm.schedule_text,
                 spotsStatus: editForm.spots_status,
                 address: editForm.address,
+                latitude: editForm.latitude,
+                longitude: editForm.longitude,
+                city: editForm.city,
+                state: editForm.state,
                 pixKey: editForm.pix_key
             }));
 
@@ -540,26 +641,56 @@ export function ArtistProfile() {
                     )}
                 </div>
 
-                <div className="profile-details-content">
-                    <h1 className="profile-name">{artist.name}</h1>
+                    <div className="profile-details-content">
+                        <h1 className="profile-name">{artist.name}</h1>
 
-                    {isEditing ? (
-                        <div style={{ marginBottom: '16px' }}>
-                            <label style={{ fontSize: '12px', color: 'var(--text-secondary)' }}>Estilos (separados por vírgula)</label>
-                            <input
-                                type="text"
-                                value={editForm.styles}
-                                onChange={(e) => setEditForm({ ...editForm, styles: e.target.value })}
-                                style={{
-                                    width: '100%', padding: '8px', borderRadius: '8px',
-                                    background: 'var(--surface)', border: '1px solid var(--border-color)',
-                                    color: 'white', marginTop: '4px'
-                                }}
-                            />
-                        </div>
-                    ) : (
-                        <p className="profile-styles">{artist.styles.join(' • ')}</p>
-                    )}
+                        {isEditing ? (
+                            <div style={{ marginBottom: '16px' }}>
+                                <label style={{ fontSize: '12px', color: 'var(--text-secondary)', marginBottom: '8px', display: 'block' }}>
+                                    Selecione seus Estilos (Clique para marcar)
+                                </label>
+                                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
+                                    {[
+                                        'Realismo', 'Fine Line', 'Old School', 'Blackwork', 'Aquarela', 
+                                        'Tribal', 'Geométrico', 'Pontilhismo', 'Tradicional', 'Sketch', 
+                                        'Lettering', 'Japonês', 'Neo Tradicional'
+                                    ].map(style => {
+                                        const isSelected = editForm.styles.split(',').map(s => s.trim()).includes(style);
+                                        return (
+                                            <button
+                                                key={style}
+                                                onClick={() => {
+                                                    const currentStyles = editForm.styles.split(',').map(s => s.trim()).filter(s => s);
+                                                    let newStyles;
+                                                    if (isSelected) {
+                                                        newStyles = currentStyles.filter(s => s !== style);
+                                                    } else {
+                                                        newStyles = [...currentStyles, style];
+                                                    }
+                                                    setEditForm({ ...editForm, styles: newStyles.join(', ') });
+                                                }}
+                                                style={{
+                                                    padding: '6px 12px',
+                                                    borderRadius: '20px',
+                                                    border: '1px solid',
+                                                    borderColor: isSelected ? 'var(--primary)' : 'var(--border-color)',
+                                                    background: isSelected ? 'rgba(229, 32, 32, 0.1)' : 'var(--surface)',
+                                                    color: isSelected ? 'var(--primary)' : 'var(--text-secondary)',
+                                                    fontSize: '12px',
+                                                    cursor: 'pointer',
+                                                    transition: 'all 0.2s',
+                                                    fontWeight: isSelected ? 'bold' : 'normal'
+                                                }}
+                                            >
+                                                {style}
+                                            </button>
+                                        );
+                                    })}
+                                </div>
+                            </div>
+                        ) : (
+                            <p className="profile-styles">{artist.styles.join(' • ')}</p>
+                        )}
 
                     <div className="profile-meta">
                         <span className="meta-item">
@@ -569,7 +700,7 @@ export function ArtistProfile() {
                         <span className="meta-dot">•</span>
                         <span className="meta-item">
                             <MapPin size={14} className="icon-red" />
-                            {artist.currentCity}
+                            {artist.city && artist.state ? `${artist.city}, ${artist.state}` : artist.currentCity}
                         </span>
                         <span className="meta-dot">•</span>
                         {isEditing ? (
@@ -591,18 +722,75 @@ export function ArtistProfile() {
 
                     {isEditing ? (
                         <div style={{ marginBottom: '16px', marginTop: '16px' }}>
-                            <label style={{ fontSize: '12px', color: 'var(--text-secondary)' }}>Endereço (Onde você está?)</label>
-                            <input
-                                type="text"
-                                value={editForm.address}
-                                onChange={(e) => setEditForm({ ...editForm, address: e.target.value })}
-                                placeholder="ex: Rua Augusta, 1200, São Paulo - SP"
-                                style={{
-                                    width: '100%', padding: '8px', borderRadius: '8px',
-                                    background: 'var(--surface)', border: '1px solid var(--border-color)',
-                                    color: 'white', marginTop: '4px'
-                                }}
-                            />
+                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+                                <label style={{ fontSize: '12px', color: 'var(--text-secondary)' }}>Onde você atende? (Endereço para o Mapa)</label>
+                                <button 
+                                    onClick={handleDetectLocation}
+                                    style={{ 
+                                        display: 'flex', alignItems: 'center', gap: '4px', background: 'rgba(229, 32, 32, 0.1)', 
+                                        color: 'var(--primary)', border: 'none', padding: '4px 8px', borderRadius: '4px', 
+                                        fontSize: '11px', cursor: 'pointer' 
+                                    }}
+                                >
+                                    <GpsFixed size={12} /> Usar meu GPS
+                                </button>
+                            </div>
+                            
+                            {isMapLoaded && (
+                                <Autocomplete
+                                    onLoad={(auto) => setAutocomplete(auto)}
+                                    onPlaceChanged={onPlaceChanged}
+                                >
+                                    <input
+                                        type="text"
+                                        value={editForm.address}
+                                        onChange={(e) => setEditForm({ ...editForm, address: e.target.value })}
+                                        placeholder="Pesquise seu estúdio ou endereço..."
+                                        style={{
+                                            width: '100%', padding: '10px', borderRadius: '8px',
+                                            background: 'var(--surface)', border: '1px solid var(--border-color)',
+                                            color: 'white', marginBottom: '12px'
+                                        }}
+                                    />
+                                </Autocomplete>
+                            )}
+                            
+                            {isMapLoaded && isEditing && (
+                                <div style={{ height: '200px', width: '100%', borderRadius: '8px', overflow: 'hidden', border: '1px solid var(--border-color)' }}>
+                                    <GoogleMap
+                                        mapContainerStyle={{ width: '100%', height: '100%' }}
+                                        center={mapCenter}
+                                        zoom={15}
+                                        options={{
+                                            disableDefaultUI: true,
+                                            styles: [
+                                                { elementType: 'geometry', stylers: [{ color: '#242f3e' }] },
+                                                { elementType: 'labels.text.stroke', stylers: [{ color: '#242f3e' }] },
+                                                { elementType: 'labels.text.fill', stylers: [{ color: '#746855' }] }
+                                            ]
+                                        }}
+                                    >
+                                        <Marker position={mapCenter} />
+                                    </GoogleMap>
+                                </div>
+                            )}
+                            
+                            <div style={{ display: 'flex', gap: '8px', marginTop: '8px' }}>
+                                <input 
+                                    type="text" 
+                                    placeholder="Cidade" 
+                                    value={editForm.city} 
+                                    readOnly 
+                                    style={{ flex: 2, padding: '8px', borderRadius: '8px', background: '#222', border: '1px solid #333', color: '#888', fontSize: '12px' }}
+                                />
+                                <input 
+                                    type="text" 
+                                    placeholder="UF" 
+                                    value={editForm.state} 
+                                    readOnly 
+                                    style={{ flex: 1, padding: '8px', borderRadius: '8px', background: '#222', border: '1px solid #333', color: '#888', fontSize: '12px' }}
+                                />
+                            </div>
                         </div>
                     ) : artist.address && (
                         <div className="profile-address" style={{ marginTop: '8px', display: 'flex', alignItems: 'center', gap: '6px', fontSize: '14px', color: 'var(--text-secondary)' }}>

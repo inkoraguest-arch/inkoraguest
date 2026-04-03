@@ -742,3 +742,28 @@
 .empty-applications p {
     margin: 20px 0 30px;
 }
+
+/* Style Chips for Job Creation */
+.style-chip {
+    padding: 8px 16px;
+    border-radius: 20px;
+    border: 1px solid var(--border-color);
+    background: var(--surface);
+    color: var(--text-secondary);
+    font-size: 13px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-weight: 500;
+}
+
+.style-chip:hover {
+    border-color: var(--primary);
+    background: rgba(229, 32, 32, 0.05);
+}
+
+.style-chip.selected {
+    background-color: rgba(229, 32, 32, 0.1);
+    color: var(--primary);
+    border-color: var(--primary);
+    font-weight: 700;
+}
