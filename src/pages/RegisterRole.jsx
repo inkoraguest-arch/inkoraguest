@@ -1,27 +1,38 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { SignUp } from '@clerk/clerk-react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { ArrowLeft, User, Palette, Warehouse } from 'lucide-react';
 import './RegisterRole.css';
 
 export function RegisterRole() {
     const navigate = useNavigate();
-    const [selectedRole, setSelectedRole] = useState(null);
+    const location = useLocation();
+    const [selectedRole, setSelectedRole] = useState(localStorage.getItem('inkoraRole'));
+
+    // Check if we are on a deeper path (like /register/verify-email-address)
+    const isSubPath = location.pathname !== '/register' && location.pathname !== '/register/';
 
     const handleSelectRole = (role) => {
         localStorage.setItem('inkoraRole', role);
         setSelectedRole(role);
     };
 
-    if (selectedRole) {
+    if (selectedRole || isSubPath) {
         return (
             <div className="auth-page role-page">
                 <header className="role-header-nav">
-                    <button className="back-btn-ghost" onClick={() => setSelectedRole(null)}>
+                    <button className="back-btn-ghost" onClick={() => {
+                        if (isSubPath) {
+                            navigate('/register');
+                        } else {
+                            setSelectedRole(null);
+                            localStorage.removeItem('inkoraRole');
+                        }
+                    }}>
                         <ArrowLeft size={24} />
                     </button>
                     <span style={{ fontSize: '14px', fontWeight: 'bold', color: 'var(--text-secondary)' }}>
-                        Cadastro como {selectedRole === 'client' ? 'Cliente' : selectedRole === 'artist' ? 'Artista' : 'Estúdio'}
+                        {isSubPath ? 'Verificação de E-mail' : `Cadastro como ${selectedRole === 'client' ? 'Cliente' : selectedRole === 'artist' ? 'Artista' : 'Estúdio'}`}
                     </span>
                 </header>
 

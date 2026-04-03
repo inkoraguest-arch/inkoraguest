@@ -65,7 +65,7 @@ function AppContent() {
 
         {/* Auth Routes */}
         <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<RegisterRole />} />
+        <Route path="/register/*" element={<RegisterRole />} />
 
         {/* Main Interface Routes (Protected) */}
         <Route 
