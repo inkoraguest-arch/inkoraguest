@@ -476,8 +476,8 @@ export function ArtistProfile() {
         return <div className="not-found">Artista não encontrado</div>;
     }
 
-    // Determine if the current user is viewing their own profile
-    const isOwner = profile?.id === artist?.id;
+    // Determine if the current user is viewing their own profile (robust check)
+    const isOwner = profile?.id === id;
 
     return (
         <div className="artist-profile-page">
