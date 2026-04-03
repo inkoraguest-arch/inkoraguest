@@ -285,9 +285,14 @@ export function SearchClient() {
                 ) : (
                     <>
                         {!isLoaded ? (
-                            <div className="map-loading">
+                            <div className="map-loading" style={{ textAlign: 'center', padding: '20px' }}>
                                 <Loader className="spin" size={32} color="var(--primary)" />
-                                <p>Carregando mapa...</p>
+                                <p style={{ marginTop: '10px' }}>Carregando mapa...</p>
+                                {!import.meta.env.VITE_GOOGLE_MAPS_API_KEY && (
+                                    <p style={{ fontSize: '11px', color: '#E52020', maxWidth: '300px', margin: '20px auto' }}>
+                                        ⚠️ <b>Aviso:</b> Chave 'VITE_GOOGLE_MAPS_API_KEY' não encontrada na Vercel.
+                                    </p>
+                                )}
                             </div>
                         ) : (
                             <GoogleMap
