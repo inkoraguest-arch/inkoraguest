@@ -43,16 +43,17 @@ export function useSyncUser() {
         }
 
         // 2. RETROACTIVE FIX: Ensure Artist/Studio record exists!
+        // Prioritize: Public Metadata -> Unsafe Metadata -> LocalStorage -> 'client'
         const role = user.publicMetadata?.role || 
                      user.unsafeMetadata?.role || 
                      localStorage.getItem('inkoraRole') || 
                      'client';
 
-        if (role === 'artist') {
+        if (role === 'artist' || role === 'admin') {
           const { data: artistExists } = await supabase.from('artists').select('profile_id').eq('profile_id', user.id).single();
           if (!artistExists) {
-            console.log('[Inkora Sync] Creating missing artist record for existing profile');
-            await supabase.from('artists').insert([{ profile_id: user.id, bio: 'Tatuador profissional no Inkora.', portfolio_urls: [] }]);
+            console.log('[Inkora Sync] Creating missing artist record for profile with role:', role);
+            await supabase.from('artists').insert([{ profile_id: user.id, bio: 'Artista profissional no Inkora.', portfolio_urls: [] }]);
           }
         } else if (role === 'studio') {
           const { data: studioExists } = await supabase.from('studios').select('profile_id').eq('profile_id', user.id).single();

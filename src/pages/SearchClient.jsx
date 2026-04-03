@@ -100,7 +100,7 @@ export function SearchClient() {
                     artists (*),
                     studios (*)
                 `)
-                .in('role', ['studio', 'artist']);
+                .in('role', ['studio', 'artist', 'admin']);
 
             if (error) {
                 console.error("Search Fetch Error", error);
