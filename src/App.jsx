@@ -21,10 +21,11 @@ import { JobApplications } from './pages/JobApplications';
 
 // Protected Route Component (Clerk version)
 const ProtectedRoute = ({ children, allowedRoles }) => {
-  const { user, isLoaded } = useUser();
-  const location = useLocation();
-
-  if (!isLoaded) return null;
+  if (!isLoaded) return (
+    <div style={{ background: '#000', height: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#E52020', fontWeight: 'bold' }}>
+      Carregando Inkora...
+    </div>
+  );
 
   if (!user) {
     return <RedirectToSignIn />;
@@ -48,7 +49,11 @@ function AppContent() {
 
   const isAuthRoute = location.pathname === '/login' || location.pathname.startsWith('/register') || location.pathname === '/';
   
-  if (!isLoaded) return null;
+  if (!isLoaded) return (
+    <div style={{ background: '#000', height: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#E52020', fontWeight: 'bold' }}>
+      Carregando Inkora...
+    </div>
+  );
 
   const activeRole = user?.publicMetadata?.role || localStorage.getItem('inkoraRole') || 'client';
 

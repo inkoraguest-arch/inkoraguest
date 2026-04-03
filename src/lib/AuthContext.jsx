@@ -16,16 +16,22 @@ export const AuthProvider = ({ children }) => {
             return;
         }
 
-        // Use the default supabase client to check for profile
-        // (If RLS is on for public reading, this works, otherwise we might need a token)
-        const { data, error } = await supabase
-            .from('profiles')
-            .select('*')
-            .eq('id', userId)
-            .single();
+        try {
+            const { data, error } = await supabase
+                .from('profiles')
+                .select('*')
+                .eq('id', userId)
+                .single();
 
-        if (data) {
-            setProfile(data);
+            if (data) {
+                setProfile(data);
+            } else if (error) {
+                console.warn('Profile not found or Supabase error:', error.message);
+            }
+        } catch (e) {
+            console.error('Critical error fetching profile:', e);
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -41,7 +47,7 @@ export const AuthProvider = ({ children }) => {
     useEffect(() => {
         if (clerkLoaded) {
             if (clerkUser) {
-                fetchProfile(clerkUser.id).then(() => setLoading(false));
+                fetchProfile(clerkUser.id);
             } else {
                 setProfile(null);
                 setLoading(false);
