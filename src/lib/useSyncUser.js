@@ -25,25 +25,40 @@ export function useSyncUser() {
                        localStorage.getItem('inkoraRole') || 
                        'client';
           
-          const { error: insertError } = await supabase
-            .from('profiles')
-            .insert([
-              {
-                id: user.id,
-                full_name: user.fullName || user.username || user.primaryEmailAddress?.emailAddress?.split('@')[0],
-                avatar_url: user.imageUrl,
-                email: user.primaryEmailAddress?.emailAddress,
-                role: role,
-                subscription_plan: 'free',
-                subscription_status: 'inactive'
-              }
-            ]);
+            const { error: insertError } = await supabase
+              .from('profiles')
+              .insert([
+                {
+                  id: user.id,
+                  full_name: user.fullName || user.username || user.primaryEmailAddress?.emailAddress?.split('@')[0],
+                  avatar_url: user.imageUrl,
+                  email: user.primaryEmailAddress?.emailAddress,
+                  role: role,
+                  subscription_plan: 'free',
+                  subscription_status: 'inactive'
+                }
+              ]);
 
-          if (insertError) {
-            console.error('[Inkora Sync] Error creating profile:', insertError.message);
-          } else {
-            console.log('[Inkora Sync] Profile created successfully!');
-          }
+            if (insertError) {
+              console.error('[Inkora Sync] Error creating profile:', insertError.message);
+            } else {
+              console.log('[Inkora Sync] Profile created successfully!');
+              
+              // NEW: If role is artist or studio, create the sub-table entry!
+              if (role === 'artist') {
+                const { error: artistError } = await supabase
+                  .from('artists')
+                  .insert([{ profile_id: user.id, bio: 'Tatuador profissional no Inkora.', portfolio_urls: [] }]);
+                
+                if (artistError) console.error('[Inkora Sync] Error creating artist entry:', artistError);
+              } else if (role === 'studio') {
+                const { error: studioError } = await supabase
+                  .from('studios')
+                  .insert([{ profile_id: user.id, bio: 'Estúdio profissional no Inkora.', studio_photos: [] }]);
+                
+                if (studioError) console.error('[Inkora Sync] Error creating studio entry:', studioError);
+              }
+            }
         } else {
           // Profile exists, and could eventually be updated here if image/name changed
           // console.log('[Inkora Sync] Profile already exists in Supabase.');
