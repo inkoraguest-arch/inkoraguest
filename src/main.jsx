@@ -22,7 +22,7 @@ createRoot(document.getElementById('root')).render(
       afterSignOutUrl="/"
       // These only work with production keys (pk_live)
       clerkJSUrl={isProd ? "https://clerk.inkoraguest.com/npm/@clerk/clerk-js@5/dist/clerk.browser.js" : undefined}
-      domain={isProd ? "clerk.inkoraguest.com" : undefined}
+      domain={isProd ? "inkoraguest.com" : undefined}
       isSatellite={false}
     >
       <App />
