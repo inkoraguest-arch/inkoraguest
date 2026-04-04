@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { MOCK_ARTISTS } from '../data/mockData';
-import { ArrowLeft, MapPin, Star, Share2, MessageCircle, LogOut, Loader, GpsFixed } from 'lucide-react';
+import { ArrowLeft, MapPin, Star, Share2, MessageCircle, LogOut, Loader, Locate } from 'lucide-react';
 import { PhotoGrid } from '../components/PhotoGrid';
 import { CalendarManager } from '../components/CalendarManager';
 import { Button } from '../components/Button';
@@ -580,7 +580,8 @@ export function ArtistProfile() {
     }
 
     // Determine if the current user is viewing their own profile (robust check)
-    const isOwner = profile?.id === id;
+    const isOwner = user && (user.id === id);
+    const isAdmin = profile?.role === 'admin';
 
     return (
         <div className="artist-profile-page">

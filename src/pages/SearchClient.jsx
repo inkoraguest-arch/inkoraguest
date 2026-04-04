@@ -1,5 +1,5 @@
 import { useState, useCallback, useEffect } from 'react';
-import { GoogleMap, useJsApiLoader, Marker } from '@react-google-maps/api';
+import { GoogleMap, useJsApiLoader, MarkerF } from '@react-google-maps/api';
 import { useNavigate } from 'react-router-dom';
 import { TopBar } from '../components/TopBar';
 import { Loader, MapPin } from 'lucide-react';
@@ -332,30 +332,30 @@ export function SearchClient() {
 
                                 {/* Render Markers */}
                                 {filteredLocations.map(loc => (
-                                    <Marker
+                                    <MarkerF
                                         key={loc.id}
                                         position={loc.location}
                                         onClick={() => setSelectedLocation(loc)}
                                         icon={loc.avatar ? {
                                             url: loc.avatar,
-                                            scaledSize: new window.google.maps.Size(40, 40),
-                                            anchor: new window.google.maps.Point(20, 20),
-                                            labelOrigin: new window.google.maps.Point(20, 45)
+                                            scaledSize: new window.google.maps.Size(42, 42),
+                                            anchor: new window.google.maps.Point(21, 21),
+                                            labelOrigin: new window.google.maps.Point(21, 50)
                                         } : {
-                                            path: window.google.maps.SymbolPath.BACKWARD_CLOSED_ARROW,
-                                            scale: 5,
+                                            path: window.google.maps.SymbolPath.CIRCLE,
+                                            scale: 14,
                                             fillColor: "#E52020",
                                             fillOpacity: 1,
-                                            strokeWeight: 1,
+                                            strokeWeight: 2,
                                             strokeColor: "white",
-                                            labelOrigin: new window.google.maps.Point(0, 5)
+                                            labelOrigin: new window.google.maps.Point(0, 3)
                                         }}
                                         label={{
-                                            text: loc.name,
-                                            color: "white",
-                                            fontSize: "12px",
-                                            fontWeight: "bold",
-                                            className: "map-marker-label"
+                                            text: `${loc.name.split(' ')[0]} ${loc.rating.toFixed(1)}★`,
+                                            color: 'white',
+                                            fontSize: '11px',
+                                            fontWeight: '900',
+                                            className: 'map-premium-label'
                                         }}
                                     />
                                 ))}
