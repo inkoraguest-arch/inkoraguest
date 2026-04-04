@@ -316,7 +316,7 @@ export function SearchClient() {
                             >
                                 {/* User Location Marker */}
                                 {userLocation && (
-                                    <Marker
+                                    <MarkerF
                                         position={userLocation}
                                         icon={{
                                             path: window.google.maps.SymbolPath.CIRCLE,

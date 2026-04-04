@@ -7,7 +7,7 @@ import { CalendarManager } from '../components/CalendarManager';
 import { Button } from '../components/Button';
 import { useUser, useClerk } from '@clerk/clerk-react';
 import { supabase } from '../lib/supabase';
-import { GoogleMap, useJsApiLoader, Marker, Autocomplete } from '@react-google-maps/api';
+import { GoogleMap, useJsApiLoader, MarkerF, Autocomplete } from '@react-google-maps/api';
 
 import './ArtistProfile.css';
 
@@ -771,7 +771,7 @@ export function ArtistProfile() {
                                             ]
                                         }}
                                     >
-                                        <Marker position={mapCenter} />
+                                        <MarkerF position={mapCenter} />
                                     </GoogleMap>
                                 </div>
                             )}
