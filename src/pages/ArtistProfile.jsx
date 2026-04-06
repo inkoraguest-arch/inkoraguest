@@ -11,6 +11,8 @@ import { GoogleMap, useJsApiLoader, MarkerF, Autocomplete } from '@react-google-
 
 import './ArtistProfile.css';
 
+const GOOGLE_MAPS_LIBRARIES = ['places'];
+
 export function ArtistProfile() {
     const { id } = useParams();
     const navigate = useNavigate();
@@ -49,7 +51,7 @@ export function ArtistProfile() {
     const { isLoaded: isMapLoaded } = useJsApiLoader({
         id: 'google-map-script',
         googleMapsApiKey: import.meta.env.VITE_GOOGLE_MAPS_API_KEY,
-        libraries: ['places']
+        libraries: GOOGLE_MAPS_LIBRARIES
     });
     const [selectedSlot, setSelectedSlot] = useState(null);
     const [guestSpots, setGuestSpots] = useState([]);

@@ -6,6 +6,8 @@ import { Loader, MapPin } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import './SearchClient.css';
 
+const GOOGLE_MAPS_LIBRARIES = ['places'];
+
 const containerStyle = {
     width: '100%',
     height: 'calc(100vh - 140px)' // Adjust for TopBar and BottomNav
@@ -60,7 +62,8 @@ export function SearchClient() {
     // Initialize Google Maps
     const { isLoaded, loadError } = useJsApiLoader({
         id: 'google-map-script',
-        googleMapsApiKey: import.meta.env.VITE_GOOGLE_MAPS_API_KEY
+        googleMapsApiKey: import.meta.env.VITE_GOOGLE_MAPS_API_KEY,
+        libraries: GOOGLE_MAPS_LIBRARIES
     });
 
     if (loadError) {
