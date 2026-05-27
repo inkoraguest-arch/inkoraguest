@@ -464,7 +464,14 @@ export function Home() {
                         <FeedPost key={post.id} post={post} />
                     ))
                 ) : (
-                    <p style={{ textAlign: 'center', color: 'var(--text-tertiary)', padding: '2rem' }}>Nenhuma postagem recente.</p>
+                    <div className="empty-feed-state" style={{
+                        textAlign: 'center', padding: '40px 20px', backgroundColor: 'var(--surface)', 
+                        borderRadius: '16px', border: '1px solid var(--border-color)', margin: '20px'
+                    }}>
+                        <Camera size={48} color="var(--text-tertiary)" style={{ marginBottom: '16px', opacity: 0.5 }} />
+                        <h3 style={{ fontSize: '18px', color: 'white', marginBottom: '8px' }}>O Feed está vazio</h3>
+                        <p style={{ fontSize: '14px', color: 'var(--text-secondary)' }}>Nenhum estúdio ou artista postou algo recentemente. Seja o primeiro a agitar a comunidade!</p>
+                    </div>
                 )}
             </div>
 

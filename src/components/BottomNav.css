@@ -48,3 +48,30 @@
 .nav-item.active:hover {
     color: #fff;
 }
+
+/* Desktop Sidebar adaptation */
+@media (min-width: 768px) {
+    .bottom-nav {
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: auto;
+        width: 100px;
+        flex-direction: column;
+        justify-content: center;
+        gap: 40px;
+        border-top: none;
+        border-right: 1px solid rgba(255, 26, 26, 0.3);
+        box-shadow: 10px 0 30px rgba(255, 26, 26, 0.1);
+        padding: 0;
+    }
+
+    .nav-item {
+        font-size: 12px;
+    }
+
+    .nav-item svg {
+        width: 28px;
+        height: 28px;
+    }
+}

@@ -87,3 +87,15 @@ button {
   border-right: 1px solid var(--border-color);
   box-shadow: 0 0 50px rgba(0,0,0,0.8), 0 0 30px rgba(255, 26, 26, 0.05);
 }
+
+@media (min-width: 768px) {
+  .container {
+    max-width: 1200px;
+    padding-bottom: 0;
+    padding-left: 100px; /* Space for the Sidebar */
+    border-left: none;
+    border-right: none;
+    box-shadow: none;
+    background-image: radial-gradient(circle at 50% 0%, rgba(200, 10, 10, 0.2), transparent 70%);
+  }
+}

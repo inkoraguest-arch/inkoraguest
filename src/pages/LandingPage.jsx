@@ -10,7 +10,7 @@ export function LandingPage() {
             {/* Navbar Premium */}
             <nav className="nav-premium">
                 <div className="nav-logo">
-                    <img src="/logo-horizontal.jpg" alt="Inkora" onError={(e) => { e.target.style.display='none' }} />
+                    <img src="/logo.jpeg" alt="Inkora" onError={(e) => { e.target.style.display='none' }} />
                     <span className="logo-text">INKORA<br/>GUEST</span>
                 </div>
                 <div className="nav-links">
@@ -29,6 +29,7 @@ export function LandingPage() {
             {/* Hero Section */}
             <section className="hero-premium" id="inicio">
                 <div className="hero-content">
+                    <img src="/logo.jpeg" alt="Inkora Logo" className="hero-logo" />
                     <span className="hero-kicker">TATUADORES. ESTÚDIOS. CLIENTES.</span>
                     <h1 className="hero-title">
                         A CONEXÃO QUE<br/>
@@ -42,7 +43,10 @@ export function LandingPage() {
                         <button className="btn-glow-solid" onClick={() => navigate('/register')}>
                             COMECE AGORA <ArrowRight size={16} />
                         </button>
-                        <a href="#recursos" className="btn-glow-ghost">EXPLORAR RECURSOS <span>▼</span></a>
+                        <button className="btn-glow-ghost" onClick={() => {
+                                const el = document.getElementById('recursos');
+                                if (el) el.scrollIntoView({ behavior: 'smooth' });
+                            }}>EXPLORAR RECURSOS <span>▼</span></button>
                     </div>
                     <div className="hero-stats-row">
                         <span><UsersIcon /> CONEXÕES REAIS</span>
@@ -54,7 +58,7 @@ export function LandingPage() {
                 <div className="hero-visual">
                     {/* The giant metallic needle logo placeholder */}
                     <div className="hero-logo-glowing">
-                        <img src="/logo-vertical.jpg" alt="Inkora Needle" className="glow-needle" onError={(e) => { e.target.style.display='none' }} />
+                        <img src="/logo.jpeg" alt="Inkora Needle" className="glow-needle" onError={(e) => { e.target.style.display='none' }} />
                     </div>
                     {/* Fake Mobile App Mockup */}
                     <div className="app-mockup">

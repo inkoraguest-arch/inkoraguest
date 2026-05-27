@@ -48,10 +48,16 @@ export function SearchClient() {
     const [ratingFilter, setRatingFilter] = useState(0); // 0, 4, 4.5
     const [map, setMap] = useState(null);
 
+    const normalize = (str) => {
+        return str ? str.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase() : "";
+    };
+
     const filteredLocations = locations.filter(loc => {
-        const matchesSearch = loc.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            loc.city.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            (loc.role === 'artist' ? 'tatuador artist' : 'estúdio studio').includes(searchQuery.toLowerCase());
+        const searchNormalized = normalize(searchQuery);
+        const matchesSearch = normalize(loc.name).includes(searchNormalized) ||
+            normalize(loc.city).includes(searchNormalized) ||
+            normalize(loc.address).includes(searchNormalized) ||
+            (loc.role === 'artist' ? 'tatuador artist' : 'estudio studio').includes(searchNormalized);
 
         const matchesPrice = priceFilter === 'all' || loc.priceRange === priceFilter;
         const matchesRating = loc.rating >= ratingFilter;
