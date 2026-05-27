@@ -195,9 +195,9 @@ export function HomeArtist() {
                 {/* Create Post Input */}
                 <div className="create-post-container" style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
                     <div className="create-post-input-wrapper">
-                        {profile?.avatar_url ? (
+                        {user?.imageUrl ? (
                             <img
-                                src={profile.avatar_url}
+                                src={user.imageUrl}
                                 alt="Your avatar"
                                 className="create-post-avatar"
                             />
@@ -207,7 +207,7 @@ export function HomeArtist() {
                                 background: 'var(--surface)', border: '1px solid var(--primary)',
                                 display: 'flex', justifyContent: 'center', alignItems: 'center', fontSize: '16px', fontWeight: 'bold'
                             }}>
-                                {profile?.full_name?.charAt(0)}
+                                {user?.fullName?.charAt(0) || user?.firstName?.charAt(0) || '?'}
                             </div>
                         )}
                         <textarea

@@ -70,11 +70,13 @@ export function Pricing() {
   ];
 
   const handleSubscribe = (planId) => {
+    // ⚠️ IMPORTANTE: Substitua as URLs abaixo pelos links reais do seu Stripe Dashboard
+    // Acesse: https://dashboard.stripe.com/payment-links e crie os links para cada plano
     const stripeLinks = {
-      'mochileiro': 'https://buy.stripe.com/test_mochileiro', 
-      'viajante': 'https://buy.stripe.com/test_viajante',
-      'guest-pro': 'https://buy.stripe.com/test_pro',
-      'estudio-guest': 'https://buy.stripe.com/test_estudio_guest'
+      'mochileiro': import.meta.env.VITE_STRIPE_LINK_MOCHILEIRO || null,
+      'viajante': import.meta.env.VITE_STRIPE_LINK_VIAJANTE || null,
+      'guest-pro': import.meta.env.VITE_STRIPE_LINK_PRO || null,
+      'estudio-guest': import.meta.env.VITE_STRIPE_LINK_ESTUDIO || null,
     };
 
     const link = stripeLinks[planId];
@@ -82,8 +84,7 @@ export function Pricing() {
     if (link) {
       window.location.href = link;
     } else {
-      console.log(`Iniciando assinatura do plano: ${planId}`);
-      alert(`Redirecionando para o checkout do Stripe para o plano: ${planId}...`);
+      alert('💳 Pagamento em breve!\n\nOs links de pagamento estão sendo configurados. Por favor, entre em contato via Instagram @inkora.guest para assinar seu plano agora!');
     }
   };
 
