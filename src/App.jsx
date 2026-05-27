@@ -96,10 +96,10 @@ function AppContent() {
   const RoleHome = activeRole === 'client' ? Home : HomeArtist;
 
   return (
-    <>
+    <div className={location.pathname === '/' || location.pathname === '/planos' ? '' : 'container'}>
       <Routes>
         {/* Public Routes */}
-        <Route path="/" element={<LandingPage />} />
+        <Route path="/" element={isSignedIn ? <Navigate to="/home" replace /> : <LandingPage />} />
         <Route path="/planos" element={<Pricing />} />
         <Route path="/success" element={<PaymentSuccess />} />
 
@@ -188,7 +188,7 @@ function AppContent() {
               <BottomNav />
           </SignedIn>
       )}
-    </>
+    </div>
   );
 }
 
@@ -197,9 +197,7 @@ function App() {
     <Router>
       <ErrorBoundary>
         <AuthProvider>
-          <div className="container">
-            <AppContent />
-          </div>
+          <AppContent />
         </AuthProvider>
       </ErrorBoundary>
     </Router>

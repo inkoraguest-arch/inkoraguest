@@ -71,7 +71,7 @@ export function Pricing() {
 
   const handleSubscribe = (planId) => {
     const stripeLinks = {
-      'mochileiro': 'https://buy.stripe.com/4gMaEW1JH31770V1tQgnK02',
+      'mochileiro': 'https://buy.stripe.com/4gMaEW1JH3i77OV1tQgnK02',
       'viajante':   'https://buy.stripe.com/eVqaEW741bODb171tQgnK03',
       'guest-pro':  'https://buy.stripe.com/aFafZgagd4mbd9f1tQgnK04',
       'estudio-guest': 'https://buy.stripe.com/9B63cu9c905Vfhn4G2gnK05',
