@@ -12,6 +12,8 @@ import { RegisterRole } from './pages/RegisterRole';
 import { SearchClient } from './pages/SearchClient';
 import { AdminDashboard } from './pages/AdminDashboard';
 import { Pricing } from './pages/Pricing';
+import { ChatbotWidget } from './components/ChatbotWidget';
+import { OnboardingGuide } from './components/OnboardingGuide';
 import { BottomNav } from './components/BottomNav';
 import { useSyncUser } from './lib/useSyncUser';
 import { PaymentSuccess } from './pages/PaymentSuccess';
@@ -19,6 +21,8 @@ import { ExploreJobs } from './pages/ExploreJobs';
 import { ManageJobs } from './pages/ManageJobs';
 import { JobApplications } from './pages/JobApplications';
 import { AuthProvider } from './lib/AuthContext';
+
+const PUBLISHABLE_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY;
 
 console.log('[Inkora Boot] Arquivo App.jsx carregado');
 
@@ -177,7 +181,13 @@ function AppContent() {
         />
       </Routes>
 
-      {!isAuthRoute && <SignedIn><BottomNav /></SignedIn>}
+      <ChatbotWidget />
+      {!isAuthRoute && (
+          <SignedIn>
+              <OnboardingGuide />
+              <BottomNav />
+          </SignedIn>
+      )}
     </>
   );
 }

@@ -1,141 +1,205 @@
 import { useNavigate } from 'react-router-dom';
-import { Button } from '../components/Button';
-import { Sparkles, Store, MapPin, ArrowRight, ShieldCheck, Star, CheckCircle } from 'lucide-react';
-import logoHorizontal from '../assets/images/logo-horizontal.jpg';
+import { Sparkles, Store, MapPin, ArrowRight, ShieldCheck, Search, Image as ImageIcon, Briefcase, ShoppingBag, Bell } from 'lucide-react';
 import './LandingPage.css';
 
 export function LandingPage() {
     const navigate = useNavigate();
 
     return (
-        <div className="landing-page">
-            {/* Navbar Minimalista */}
-            <nav className="landing-nav">
-                <img src={logoHorizontal} alt="Inkora Logo" className="landing-logo-img" />
-                <div className="landing-nav-links">
-                    <a href="#features">Recursos</a>
-                    <a href="#planos" onClick={(e) => { e.preventDefault(); navigate('/planos'); }}>Preços</a>
+        <div className="landing-premium">
+            {/* Navbar Premium */}
+            <nav className="nav-premium">
+                <div className="nav-logo">
+                    <img src="/logo-horizontal.jpg" alt="Inkora" onError={(e) => { e.target.style.display='none' }} />
+                    <span className="logo-text">INKORA<br/>GUEST</span>
                 </div>
-                <div className="landing-nav-actions">
-                    <button className="nav-login-btn" onClick={() => navigate('/login')}>Entrar</button>
-                    <Button variant="primary" onClick={() => navigate('/register')}>Criar Conta</Button>
+                <div className="nav-links">
+                    <a href="#inicio">INÍCIO</a>
+                    <a href="#recursos">RECURSOS</a>
+                    <a href="#comunidade">COMUNIDADE</a>
+                    <a href="#marketplace">MARKETPLACE</a>
+                    <a href="#" onClick={() => navigate('/planos')}>PLANOS</a>
+                    <a href="#" onClick={() => navigate('/login')}>LOGIN</a>
                 </div>
+                <button className="btn-glow-outline" onClick={() => navigate('/register')}>
+                    CRIAR CONTA <ArrowRight size={16} />
+                </button>
             </nav>
 
             {/* Hero Section */}
-            <section className="hero-section">
+            <section className="hero-premium" id="inicio">
                 <div className="hero-content">
-                    <h2 className="hero-title">A conexão definitiva entre <span>Tatuadores</span>, <span>Estúdios</span> e <span>Clientes</span>.</h2>
-                    <p className="hero-subtitle">Leve sua arte pelo mundo. Encontre o estúdio ideal para seu Guest Spot. Descubra tatuadores incríveis na sua cidade.</p>
-                    <div className="hero-cta-group">
-                        <Button variant="primary" onClick={() => navigate('/register')} style={{ padding: '16px 32px', fontSize: '18px' }}>
-                            Começar a usar o Inkora <ArrowRight size={20} style={{ marginLeft: '8px' }} />
-                        </Button>
-                        <button className="secondary-cta" onClick={() => navigate('/planos')}>
-                            Ver Planos Profissionais
+                    <span className="hero-kicker">TATUADORES. ESTÚDIOS. CLIENTES.</span>
+                    <h1 className="hero-title">
+                        A CONEXÃO QUE<br/>
+                        <span className="text-glow">TRANSFORMA</span><br/>
+                        A SUA ARTE.
+                    </h1>
+                    <p className="hero-desc">
+                        Inkora Guest é a plataforma completa para tatuadores em guest, conectando talentos, oportunidades e clientes em um só lugar.
+                    </p>
+                    <div className="hero-actions">
+                        <button className="btn-glow-solid" onClick={() => navigate('/register')}>
+                            COMECE AGORA <ArrowRight size={16} />
                         </button>
+                        <a href="#recursos" className="btn-glow-ghost">EXPLORAR RECURSOS <span>▼</span></a>
+                    </div>
+                    <div className="hero-stats-row">
+                        <span><UsersIcon /> CONEXÕES REAIS</span>
+                        <span><LightningIcon /> OPORTUNIDADES</span>
+                        <span><ShieldIcon /> LIBERDADE</span>
                     </div>
                 </div>
-                <div className="hero-image-overlay"></div>
-            </section>
 
-            {/* Como Funciona / Features */}
-            <section id="features" className="features-section">
-                <h3 className="section-title text-center">Uma plataforma para todos</h3>
-
-                <div className="features-grid">
-                    {/* Cliente */}
-                    <div className="feature-card client-feature">
-                        <div className="feature-icon-wrapper">
-                            <Sparkles size={32} />
-                        </div>
-                        <h4>Para Clientes</h4>
-                        <p>Faça nosso Quiz inteligente de estilo, encontre os melhores artistas recomendados perto de você e chame direto no WhatsApp.</p>
+                <div className="hero-visual">
+                    {/* The giant metallic needle logo placeholder */}
+                    <div className="hero-logo-glowing">
+                        <img src="/logo-vertical.jpg" alt="Inkora Needle" className="glow-needle" onError={(e) => { e.target.style.display='none' }} />
                     </div>
-
-                    {/* Artista */}
-                    <div className="feature-card artist-feature">
-                        <div className="feature-icon-wrapper">
-                            <MapPin size={32} />
+                    {/* Fake Mobile App Mockup */}
+                    <div className="app-mockup">
+                        <div className="mockup-header">
+                            <span>INKORA GUEST</span>
+                            <div><Bell size={14}/><ShoppingBag size={14}/></div>
                         </div>
-                        <h4>Para Tatuadores</h4>
-                        <p>Organize suas viagens (Guest Spots). Encontre estúdios com bancadas livres e venda seus flashes e prints na Loja Integrada.</p>
-                    </div>
-
-                    {/* Estúdio */}
-                    <div className="feature-card studio-feature">
-                        <div className="feature-icon-wrapper">
-                            <Store size={32} />
+                        <div className="mockup-feed">
+                            <div className="mockup-post">
+                                <div className="post-head">
+                                    <div className="post-av"></div>
+                                    <div className="post-info">
+                                        <b>@black.ink</b><br/><span>São Paulo, SP</span>
+                                    </div>
+                                </div>
+                                <div className="post-img"></div>
+                            </div>
                         </div>
-                        <h4>Para Estúdios</h4>
-                        <p>Anuncie vagas nas suas bancadas para artistas viajantes, divulgue eventos e crie uma rede de networking na comunidade.</p>
                     </div>
                 </div>
             </section>
 
-            {/* Plans Preview Section */}
-            <section id="planos" className="plans-preview-section">
-                <div className="plans-preview-content">
-                    <h3 className="section-title">Impulsione sua Carreira</h3>
-                    <p className="section-subtitle">Escolha o plano que se adapta ao seu momento profissional.</p>
-                    
-                    <div className="plans-benefits">
-                        <div className="benefit-item">
-                            <CheckCircle size={20} className="benefit-icon" />
-                            <span>Mochileiro: Para quem está começando.</span>
-                        </div>
-                        <div className="benefit-item">
-                            <CheckCircle size={20} className="benefit-icon" />
-                            <span>Viajante: O plano favorito dos nômades.</span>
-                        </div>
-                        <div className="benefit-item">
-                            <CheckCircle size={20} className="benefit-icon" />
-                            <span>Guest PRO: Máxima visibilidade e taxas zero.</span>
-                        </div>
-                        <div className="benefit-item">
-                            <CheckCircle size={20} className="benefit-icon" />
-                            <span>Estúdio Guest: Gestão profissional de vagas.</span>
-                        </div>
+            {/* Três Pilares */}
+            <section className="pillars-section" id="recursos">
+                <h3 className="section-title-sm">TRÊS TIPOS DE CONEXÃO.</h3>
+                <div className="pillars-grid">
+                    <div className="pillar-card">
+                        <div className="pillar-icon"><Briefcase size={24}/> TATUADORES</div>
+                        <p>Encontre oportunidades de guest, divulgue seu trabalho, conecte-se com estúdios e clientes.</p>
+                        <button className="btn-pillar">SAIBA MAIS <ArrowRight size={14}/></button>
+                    </div>
+                    <div className="pillar-card">
+                        <div className="pillar-icon"><Store size={24}/> ESTÚDIOS</div>
+                        <p>Encontre artistas incríveis, preencha suas agendas e destaque seu espaço.</p>
+                        <button className="btn-pillar">SAIBA MAIS <ArrowRight size={14}/></button>
+                    </div>
+                    <div className="pillar-card">
+                        <div className="pillar-icon"><UsersIcon /> CLIENTES</div>
+                        <p>Descubra artistas, acompanhe seus trabalhos e agende sua próxima tattoo.</p>
+                        <button className="btn-pillar">SAIBA MAIS <ArrowRight size={14}/></button>
                     </div>
                     
-                    <Button variant="primary" onClick={() => navigate('/planos')} style={{ marginTop: '24px' }}>
-                        Conhecer Planos e Preços
-                    </Button>
-                </div>
-            </section>
-
-            {/* Social Proof */}
-            <section className="social-proof-section">
-                <h3 className="section-title text-center">Comunidade Inkora</h3>
-                <div className="testimonials-row">
-                    <div className="testimonial-card">
-                        <div className="stars"><Star size={16} fill="currentColor" /><Star size={16} fill="currentColor" /><Star size={16} fill="currentColor" /><Star size={16} fill="currentColor" /><Star size={16} fill="currentColor" /></div>
-                        <p>"Consegui fechar minha agenda em SP em 3 dias usando os alertas de Guest Spot. Aplicativo impecável para quem vive na estrada."</p>
-                        <span className="testimonial-author">- Luna Vance (Tatuadora)</span>
-                    </div>
-                    <div className="testimonial-card">
-                        <div className="stars"><Star size={16} fill="currentColor" /><Star size={16} fill="currentColor" /><Star size={16} fill="currentColor" /><Star size={16} fill="currentColor" /><Star size={16} fill="currentColor" /></div>
-                        <p>"O Quiz de estilo achou exatamente quem eu precisava para fechar meu braço. Nunca foi tão fácil achar o artista certo."</p>
-                        <span className="testimonial-author">- Thiago M. (Cliente)</span>
+                    <div className="global-stats">
+                        <div className="stat-line"><span>+15K</span> TATUADORES</div>
+                        <div className="stat-line"><span>+3K</span> ESTÚDIOS</div>
+                        <div className="stat-line"><span>+50K</span> CLIENTES</div>
+                        <div className="stat-line"><span>+25K</span> GUEST SPOTS</div>
                     </div>
                 </div>
             </section>
 
-            {/* Footer */}
-            <footer className="landing-footer">
-                <div className="footer-content">
-                    <img src={logoHorizontal} alt="Inkora Logo" className="landing-footer-logo" />
-                    <p className="footer-text">Elevando o padrão da cultura da tatuagem em todo o mundo. Construído com <ShieldCheck size={14} style={{ display: 'inline', color: 'var(--primary)' }} /> para segurança de todos.</p>
-                    <div className="footer-links">
-                        <a href="#">Termos de Uso</a>
-                        <a href="#">Privacidade</a>
-                        <a href="#">Contato</a>
+            {/* Tudo o que você precisa */}
+            <section className="features-showcase">
+                <div className="features-list">
+                    <h2>TUDO O QUE VOCÊ<br/>PRECISA. EM UM<br/>SÓ LUGAR.</h2>
+                    <ul>
+                        <li>
+                            <ImageIcon size={20} color="var(--primary)" />
+                            <div>
+                                <b>FEED INTERATIVO</b>
+                                <p>Poste vagas, trabalhos e conecte-se com a comunidade.</p>
+                            </div>
+                        </li>
+                        <li>
+                            <MapPin size={20} color="var(--primary)" />
+                            <div>
+                                <b>MAPA EM TEMPO REAL</b>
+                                <p>Encontre estúdios e artistas disponíveis perto de você.</p>
+                            </div>
+                        </li>
+                        <li>
+                            <ShoppingBag size={20} color="var(--primary)" />
+                            <div>
+                                <b>MARKETPLACE EXCLUSIVO</b>
+                                <p>Venda artes, acessórios e produtos para tatuadores e clientes.</p>
+                            </div>
+                        </li>
+                    </ul>
+                    <button className="btn-glow-outline">VER TODOS RECURSOS <ArrowRight size={16}/></button>
+                </div>
+
+                <div className="features-panels">
+                    <div className="panel map-panel">
+                        <div className="panel-head">MAPA AO VIVO</div>
+                        <div className="map-fake-bg">
+                            {/* Pontos de luz simulando mapa */}
+                            <div className="pin p1"></div><div className="pin p2"></div><div className="pin p3"></div>
+                        </div>
+                    </div>
+                    <div className="panel market-panel" id="marketplace">
+                        <div className="panel-head">MARKETPLACE</div>
+                        <div className="market-items">
+                            <div className="m-item"><div className="img-ph"></div><span>Arte Digital</span><b>R$ 150,00</b></div>
+                            <div className="m-item"><div className="img-ph"></div><span>Grip de Aço</span><b>R$ 89,90</b></div>
+                        </div>
+                        <div className="panel-head mt-4">VAGAS EM DESTAQUE</div>
+                        <div className="job-items">
+                            <div className="j-item"><b>Black Ink Studio</b><span>2 vagas abertas</span></div>
+                            <div className="j-item"><b>ArtCore Tattoo</b><span>1 vaga aberta</span></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            {/* CTA Final */}
+            <section className="final-cta">
+                <h2>SUA PRÓXIMA CONEXÃO PODE <span className="text-glow">MUDAR TUDO.</span></h2>
+                <p>JUNTE-SE À MAIOR PLATAFORMA DE GUEST DO BRASIL.</p>
+                <button className="btn-glow-solid large" onClick={() => navigate('/register')}>
+                    CRIAR CONTA GRATUITA <ArrowRight size={18}/>
+                </button>
+            </section>
+
+            {/* Footer Premium */}
+            <footer className="footer-premium">
+                <div className="footer-cols">
+                    <div className="f-col main-col">
+                        <div className="nav-logo">
+                            <img src="/logo-horizontal.jpg" alt="Inkora" onError={(e) => { e.target.style.display='none' }} />
+                            <span className="logo-text">INKORA<br/>GUEST</span>
+                        </div>
+                        <p>Conectando tatuadores, estúdios e clientes. Potencializando a arte. Fortalecendo a comunidade.</p>
+                    </div>
+                    <div className="f-col">
+                        <h4>PLATAFORMA</h4>
+                        <a href="#">Recursos</a><a href="#">Como funciona</a><a href="#">Planos</a><a href="#">Privacidade</a>
+                    </div>
+                    <div className="f-col">
+                        <h4>COMUNIDADE</h4>
+                        <a href="#">Blog</a><a href="#">Eventos</a><a href="#">Parcerias</a>
+                    </div>
+                    <div className="f-col">
+                        <h4>SUPORTE</h4>
+                        <a href="#">Central de ajuda</a><a href="#">Contato</a><a href="#">Segurança</a>
                     </div>
                 </div>
                 <div className="footer-bottom">
-                    <p>&copy; 2026 Inkora App. Todos os direitos reservados.</p>
+                    &copy; 2026 Inkora Guest. Todos os direitos reservados.
                 </div>
             </footer>
         </div>
     );
 }
+
+// Helper simple icons to avoid blowing up imports
+function UsersIcon() { return <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>; }
+function LightningIcon() { return <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>; }
+function ShieldIcon() { return <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>; }
