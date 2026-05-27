@@ -70,21 +70,18 @@ export function Pricing() {
   ];
 
   const handleSubscribe = (planId) => {
-    // ⚠️ IMPORTANTE: Substitua as URLs abaixo pelos links reais do seu Stripe Dashboard
-    // Acesse: https://dashboard.stripe.com/payment-links e crie os links para cada plano
     const stripeLinks = {
-      'mochileiro': import.meta.env.VITE_STRIPE_LINK_MOCHILEIRO || null,
-      'viajante': import.meta.env.VITE_STRIPE_LINK_VIAJANTE || null,
-      'guest-pro': import.meta.env.VITE_STRIPE_LINK_PRO || null,
-      'estudio-guest': import.meta.env.VITE_STRIPE_LINK_ESTUDIO || null,
+      'mochileiro': 'https://buy.stripe.com/4gMaEW1JH31770V1tQgnK02',
+      'viajante':   'https://buy.stripe.com/eVqaEW741bODb171tQgnK03',
+      'guest-pro':  'https://buy.stripe.com/aFafZgagd4mbd9f1tQgnK04',
+      'estudio-guest': 'https://buy.stripe.com/9B63cu9c905Vfhn4G2gnK05',
     };
 
     const link = stripeLinks[planId];
-    
     if (link) {
       window.location.href = link;
     } else {
-      alert('💳 Pagamento em breve!\n\nOs links de pagamento estão sendo configurados. Por favor, entre em contato via Instagram @inkora.guest para assinar seu plano agora!');
+      alert('Link de pagamento não encontrado. Entre em contato via Instagram @inkora.guest');
     }
   };
 
