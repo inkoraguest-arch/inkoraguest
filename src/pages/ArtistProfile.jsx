@@ -5,7 +5,7 @@ import { ArrowLeft, MapPin, Star, Share2, MessageCircle, LogOut, Loader, Locate 
 import { PhotoGrid } from '../components/PhotoGrid';
 import { CalendarManager } from '../components/CalendarManager';
 import { Button } from '../components/Button';
-import { useUser, useClerk } from '@clerk/clerk-react';
+import { useUser, useClerk, UserButton } from '@clerk/clerk-react';
 import { supabase } from '../lib/supabase';
 import { GoogleMap, useJsApiLoader, MarkerF, Autocomplete } from '@react-google-maps/api';
 
@@ -609,9 +609,9 @@ export function ArtistProfile() {
                     </button>
 
                     {isOwner && (
-                        <button className="share-btn" onClick={handleSignOut} title="Sair do Perfil">
-                            <LogOut size={24} color="#E52020" />
-                        </button>
+                        <div style={{ display: 'flex', alignItems: 'center', marginLeft: '8px' }}>
+                            <UserButton afterSignOutUrl="/" />
+                        </div>
                     )}
                 </div>
             </header>

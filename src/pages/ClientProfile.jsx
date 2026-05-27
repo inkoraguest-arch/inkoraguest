@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { MOCK_ARTISTS } from '../data/mockData';
 import { ArtistCard } from '../components/ArtistCard';
 import { Settings, Bell, LogOut } from 'lucide-react';
-import { useUser, useClerk } from '@clerk/clerk-react';
+import { useUser, useClerk, UserButton } from '@clerk/clerk-react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 import './ClientProfile.css';
@@ -100,7 +100,9 @@ export function ClientProfile() {
             <header className="client-header">
                 <h1 className="client-title">Meu Perfil</h1>
                 <div className="client-actions">
-                    <button className="icon-btn" onClick={handleSignOut} title="Sair"><LogOut size={24} /></button>
+                    <div style={{ display: 'flex', alignItems: 'center', marginLeft: '8px' }}>
+                        <UserButton afterSignOutUrl="/" />
+                    </div>
                     <button className="icon-btn"><Bell size={24} /></button>
                     <button
                         className="icon-btn"

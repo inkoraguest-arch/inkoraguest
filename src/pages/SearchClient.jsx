@@ -1,5 +1,5 @@
 import { useState, useCallback, useEffect } from 'react';
-import { GoogleMap, useJsApiLoader, MarkerF } from '@react-google-maps/api';
+import { GoogleMap, useJsApiLoader, MarkerF, OverlayViewF } from '@react-google-maps/api';
 import { useNavigate } from 'react-router-dom';
 import { TopBar } from '../components/TopBar';
 import { Loader, MapPin } from 'lucide-react';
@@ -333,34 +333,70 @@ export function SearchClient() {
                                     />
                                 )}
 
-                                {/* Render Markers */}
                                 {filteredLocations.map(loc => (
-                                    <MarkerF
+                                    <OverlayViewF
                                         key={loc.id}
                                         position={loc.location}
-                                        onClick={() => setSelectedLocation(loc)}
-                                        icon={loc.avatar ? {
-                                            url: loc.avatar,
-                                            scaledSize: new window.google.maps.Size(42, 42),
-                                            anchor: new window.google.maps.Point(21, 21),
-                                            labelOrigin: new window.google.maps.Point(21, 50)
-                                        } : {
-                                            path: window.google.maps.SymbolPath.CIRCLE,
-                                            scale: 14,
-                                            fillColor: "#E52020",
-                                            fillOpacity: 1,
-                                            strokeWeight: 2,
-                                            strokeColor: "white",
-                                            labelOrigin: new window.google.maps.Point(0, 3)
-                                        }}
-                                        label={{
-                                            text: `${loc.name.split(' ')[0]} ${loc.rating.toFixed(1)}★`,
-                                            color: 'white',
-                                            fontSize: '11px',
-                                            fontWeight: '900',
-                                            className: 'map-premium-label'
-                                        }}
-                                    />
+                                        mapPaneName={OverlayViewF.OVERLAY_MOUSE_TARGET}
+                                    >
+                                        <div 
+                                            onClick={() => setSelectedLocation(loc)}
+                                            style={{
+                                                position: 'absolute',
+                                                transform: 'translate(-50%, -100%)',
+                                                display: 'flex',
+                                                flexDirection: 'column',
+                                                alignItems: 'center',
+                                                cursor: 'pointer',
+                                                filter: selectedLocation?.id === loc.id ? 'drop-shadow(0 0 8px rgba(229, 32, 32, 0.8))' : 'drop-shadow(0 4px 6px rgba(0,0,0,0.3))',
+                                                transition: 'all 0.2s ease',
+                                                zIndex: selectedLocation?.id === loc.id ? 100 : 1
+                                            }}
+                                        >
+                                            <div style={{
+                                                background: 'var(--surface)',
+                                                padding: '4px 8px',
+                                                borderRadius: '20px',
+                                                marginBottom: '4px',
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                gap: '4px',
+                                                border: '1px solid var(--border-color)',
+                                                whiteSpace: 'nowrap'
+                                            }}>
+                                                <span style={{ fontSize: '11px', fontWeight: 'bold', color: 'white' }}>
+                                                    {loc.name.split(' ')[0]}
+                                                </span>
+                                                <span style={{ fontSize: '10px', color: 'gold' }}>{loc.rating.toFixed(1)}★</span>
+                                            </div>
+                                            <div style={{
+                                                width: '40px',
+                                                height: '40px',
+                                                borderRadius: '50%',
+                                                border: '2px solid var(--primary)',
+                                                backgroundImage: loc.avatar ? `url(${loc.avatar})` : 'none',
+                                                backgroundColor: loc.avatar ? 'transparent' : 'var(--surface)',
+                                                backgroundSize: 'cover',
+                                                backgroundPosition: 'center',
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                justifyContent: 'center',
+                                                color: 'white',
+                                                fontWeight: 'bold',
+                                                fontSize: '16px'
+                                            }}>
+                                                {!loc.avatar && loc.name.charAt(0).toUpperCase()}
+                                            </div>
+                                            <div style={{
+                                                width: 0,
+                                                height: 0,
+                                                borderLeft: '6px solid transparent',
+                                                borderRight: '6px solid transparent',
+                                                borderTop: '6px solid var(--primary)',
+                                                marginTop: '-2px'
+                                            }} />
+                                        </div>
+                                    </OverlayViewF>
                                 ))}
                             </GoogleMap>
                         )}
