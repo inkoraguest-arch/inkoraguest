@@ -1,17 +1,17 @@
 :root {
   /* Colors */
-  --bg-primary: #0F0F0F;
-  --bg-secondary: #1A1A1A;
-  --bg-tertiary: #2C2C2C;
+  --bg-primary: #050505;
+  --bg-secondary: #111111;
+  --bg-tertiary: #1A1A1A;
 
-  --primary: #E52020;
-  --primary-hover: #D32F2F;
+  --primary: #ff1a1a;
+  --primary-hover: #cc0000;
 
   --text-primary: #FFFFFF;
   --text-secondary: #AAAAAA;
   --text-tertiary: #757575;
 
-  --border-color: #333333;
+  --border-color: rgba(255, 26, 26, 0.2);
 
   /* Typography */
   --font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
@@ -25,6 +25,7 @@
 
 body {
   background-color: var(--bg-primary);
+  background-image: radial-gradient(circle at 50% 0%, rgba(200, 10, 10, 0.1), transparent 70%);
   color: var(--text-primary);
   font-family: var(--font-family);
   -webkit-font-smoothing: antialiased;
@@ -76,9 +77,13 @@ button {
   max-width: 600px;
   margin: 0 auto;
   min-height: 100vh;
-  background-color: var(--bg-primary);
+  background-color: #050505;
+  background-image: radial-gradient(circle at 50% 0%, rgba(200, 10, 10, 0.15), transparent 60%);
   position: relative;
   /* Add padding bottom to account for bottom nav on mobile */
   padding-bottom: 70px;
   overflow-x: hidden;
+  border-left: 1px solid var(--border-color);
+  border-right: 1px solid var(--border-color);
+  box-shadow: 0 0 50px rgba(0,0,0,0.8), 0 0 30px rgba(255, 26, 26, 0.05);
 }

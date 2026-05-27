@@ -77,7 +77,7 @@ const ProtectedRoute = ({ children, allowedRoles }) => {
 
 function AppContent() {
   const location = useLocation();
-  const { user, isLoaded } = useUser();
+  const { user, isSignedIn, isLoaded } = useUser();
   
   // Custom hook to automatically create Supabase profile on first sign-in
   useSyncUser();
