@@ -668,10 +668,19 @@
     .footer-cols {
         grid-template-columns: 1fr;
     }
+    .hero-visual {
+        height: 400px;
+        margin-top: 20px;
+    }
+    .hero-logo-glowing {
+        width: 280px;
+        height: 280px;
+    }
     .app-mockup {
-        position: relative;
+        position: absolute;
+        height: 350px;
         right: auto;
         transform: none;
-        margin-top: -100px;
+        margin-top: 0;
     }
 }

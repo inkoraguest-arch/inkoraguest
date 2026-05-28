@@ -141,7 +141,7 @@ export function LandingPage() {
                             </div>
                         </li>
                     </ul>
-                    <button className="btn-glow-outline">VER TODOS RECURSOS <ArrowRight size={16}/></button>
+                    <button className="btn-glow-outline" onClick={() => document.getElementById('recursos')?.scrollIntoView({ behavior: 'smooth' })}>VER TODOS RECURSOS <ArrowRight size={16}/></button>
                 </div>
 
                 <div className="features-panels">
