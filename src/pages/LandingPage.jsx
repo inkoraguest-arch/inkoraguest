@@ -92,17 +92,17 @@ export function LandingPage() {
                     <div className="pillar-card">
                         <div className="pillar-icon"><Briefcase size={24}/> TATUADORES</div>
                         <p>Encontre oportunidades de guest, divulgue seu trabalho, conecte-se com estúdios e clientes.</p>
-                        <button className="btn-pillar">SAIBA MAIS <ArrowRight size={14}/></button>
+                        <button className="btn-pillar" onClick={() => navigate('/register')}>SAIBA MAIS <ArrowRight size={14}/></button>
                     </div>
                     <div className="pillar-card">
                         <div className="pillar-icon"><Store size={24}/> ESTÚDIOS</div>
                         <p>Encontre artistas incríveis, preencha suas agendas e destaque seu espaço.</p>
-                        <button className="btn-pillar">SAIBA MAIS <ArrowRight size={14}/></button>
+                        <button className="btn-pillar" onClick={() => navigate('/register')}>SAIBA MAIS <ArrowRight size={14}/></button>
                     </div>
                     <div className="pillar-card">
                         <div className="pillar-icon"><UsersIcon /> CLIENTES</div>
                         <p>Descubra artistas, acompanhe seus trabalhos e agende sua próxima tattoo.</p>
-                        <button className="btn-pillar">SAIBA MAIS <ArrowRight size={14}/></button>
+                        <button className="btn-pillar" onClick={() => navigate('/register')}>SAIBA MAIS <ArrowRight size={14}/></button>
                     </div>
                     
                     <div className="global-stats">
