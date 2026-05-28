@@ -504,21 +504,65 @@
 
 .map-fake-bg {
     height: 300px;
-    background: radial-gradient(circle at center, #222, #050505);
+    background: linear-gradient(rgba(5,5,5,0.7), rgba(5,5,5,0.7)), url('https://images.unsplash.com/photo-1524661135-423995f22d0b?w=800&q=80') center/cover;
     border-radius: 12px;
     position: relative;
 }
 
-.pin {
-    width: 12px; height: 12px;
-    background: #ff1a1a;
-    border-radius: 50%;
+.balloon-pin {
     position: absolute;
-    box-shadow: 0 0 10px #ff1a1a;
+    display: flex;
+    align-items: center;
+    background: #050505;
+    border: 2px solid #ff1a1a;
+    border-radius: 20px;
+    padding: 4px 8px 4px 4px;
+    gap: 6px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.8), 0 0 15px rgba(255, 26, 26, 0.4);
+    transform: translate(-50%, -100%);
+    cursor: pointer;
+    transition: transform 0.2s;
 }
-.p1 { top: 30%; left: 40%; }
-.p2 { top: 60%; left: 70%; }
-.p3 { top: 50%; left: 20%; }
+
+.balloon-pin:hover {
+    transform: translate(-50%, -105%) scale(1.05);
+}
+
+.balloon-pin::after {
+    content: '';
+    position: absolute;
+    bottom: -8px;
+    left: 50%;
+    transform: translateX(-50%);
+    border-width: 8px 8px 0;
+    border-style: solid;
+    border-color: #ff1a1a transparent transparent;
+}
+
+.balloon-pin img {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.balloon-pin .info {
+    display: flex;
+    flex-direction: column;
+}
+
+.balloon-pin .name {
+    font-size: 10px;
+    font-weight: 700;
+    color: #fff;
+    line-height: 1.2;
+}
+
+.balloon-pin .rating {
+    font-size: 9px;
+    color: #ffd700;
+    font-weight: 600;
+}
 
 .market-items {
     display: flex;
@@ -532,7 +576,7 @@
     flex: 1;
 }
 
-.m-item .img-ph { height: 80px; background: #333; border-radius: 4px; margin-bottom: 10px; }
+.m-item .img-ph { width: 100%; height: 80px; object-fit: cover; background: #333; border-radius: 4px; margin-bottom: 10px; display: block; }
 .m-item span { display: block; font-size: 11px; color: #aaa; margin-bottom: 4px; }
 .m-item b { font-size: 13px; color: #fff; }
 

@@ -152,15 +152,43 @@ export function LandingPage() {
                     <div className="panel map-panel">
                         <div className="panel-head">MAPA AO VIVO</div>
                         <div className="map-fake-bg">
-                            {/* Pontos de luz simulando mapa */}
-                            <div className="pin p1"></div><div className="pin p2"></div><div className="pin p3"></div>
+                            {/* Balões estilo app */}
+                            <div className="balloon-pin" style={{ top: '35%', left: '30%' }}>
+                                <img src="https://images.unsplash.com/photo-1598371839696-5c5bb00bdc28?w=100&q=80" alt="Artista"/>
+                                <div className="info">
+                                    <span className="name">Lucas Art</span>
+                                    <span className="rating">★ 4.9</span>
+                                </div>
+                            </div>
+                            <div className="balloon-pin" style={{ top: '65%', left: '75%' }}>
+                                <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&q=80" alt="Estúdio"/>
+                                <div className="info">
+                                    <span className="name">Ink Palace</span>
+                                    <span className="rating">★ 5.0</span>
+                                </div>
+                            </div>
+                            <div className="balloon-pin" style={{ top: '55%', left: '25%' }}>
+                                <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=100&q=80" alt="Artista"/>
+                                <div className="info">
+                                    <span className="name">Mia Ink</span>
+                                    <span className="rating">★ 4.8</span>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div className="panel market-panel" id="marketplace">
                         <div className="panel-head">MARKETPLACE</div>
                         <div className="market-items">
-                            <div className="m-item"><div className="img-ph"></div><span>Arte Digital</span><b>R$ 150,00</b></div>
-                            <div className="m-item"><div className="img-ph"></div><span>Grip de Aço</span><b>R$ 89,90</b></div>
+                            <div className="m-item">
+                                <img src="https://images.unsplash.com/photo-1568515045052-f9a854d70bfd?w=300&q=80" className="img-ph" alt="Arte Digital" />
+                                <span>Design Flash Exclusivo</span>
+                                <b>R$ 150,00</b>
+                            </div>
+                            <div className="m-item">
+                                <img src="https://images.unsplash.com/photo-1611501275019-9b5cda994e8d?w=300&q=80" className="img-ph" alt="Máquina" />
+                                <span>Máquina Pen Premium</span>
+                                <b>R$ 1.890,00</b>
+                            </div>
                         </div>
                         <div className="panel-head mt-4">VAGAS EM DESTAQUE</div>
                         <div className="job-items">
