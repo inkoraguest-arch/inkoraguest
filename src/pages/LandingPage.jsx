@@ -10,7 +10,7 @@ export function LandingPage() {
             {/* Navbar Premium */}
             <nav className="nav-premium">
                 <div className="nav-logo">
-                    <img src="/logo.jpeg" alt="Inkora" onError={(e) => { e.target.style.display='none' }} />
+                    <img src="/logo inkora.png" alt="Inkora" onError={(e) => { e.target.style.display='none' }} />
                     <span className="logo-text">INKORA<br/>GUEST</span>
                 </div>
                 <div className="nav-links">
@@ -29,7 +29,7 @@ export function LandingPage() {
             {/* Hero Section */}
             <section className="hero-premium" id="inicio">
                 <div className="hero-content">
-                    <img src="/logo.jpeg" alt="Inkora Logo" className="hero-logo" />
+                    <img src="/logo inkora.png" alt="Inkora Logo" className="hero-logo" />
                     <span className="hero-kicker">TATUADORES. ESTÚDIOS. CLIENTES.</span>
                     <h1 className="hero-title">
                         A CONEXÃO QUE<br/>
@@ -58,23 +58,28 @@ export function LandingPage() {
                 <div className="hero-visual">
                     {/* The giant metallic needle logo placeholder */}
                     <div className="hero-logo-glowing">
-                        <img src="/logo.jpeg" alt="Inkora Needle" className="glow-needle" onError={(e) => { e.target.style.display='none' }} />
+                        <img src="/logo inkora.png" alt="Inkora Needle" className="glow-needle" onError={(e) => { e.target.style.display='none' }} />
                     </div>
                     {/* Fake Mobile App Mockup */}
                     <div className="app-mockup">
                         <div className="mockup-header">
                             <span>INKORA GUEST</span>
-                            <div><Bell size={14}/><ShoppingBag size={14}/></div>
+                            <div><Bell size={14} style={{marginRight: '8px'}}/><ShoppingBag size={14}/></div>
                         </div>
                         <div className="mockup-feed">
                             <div className="mockup-post">
                                 <div className="post-head">
-                                    <div className="post-av"></div>
+                                    <div className="post-av" style={{backgroundImage: 'url(https://images.unsplash.com/photo-1598371839696-5c5bb00bdc28?w=100&h=100&fit=crop)', backgroundSize: 'cover'}}></div>
                                     <div className="post-info">
                                         <b>@black.ink</b><br/><span>São Paulo, SP</span>
                                     </div>
                                 </div>
-                                <div className="post-img"></div>
+                                <div className="post-content-text">
+                                    Vaga de Guest disponível para a próxima semana! 🔥 Mande seu portfólio por DM.
+                                </div>
+                                <div className="post-img" style={{backgroundImage: 'url(https://images.unsplash.com/photo-1598371839696-5c5bb00bdc28?w=500&h=300&fit=crop)', backgroundSize: 'cover', backgroundPosition: 'center'}}>
+                                    <div className="post-date-badge">12 A 15 DE JUNHO</div>
+                                </div>
                             </div>
                         </div>
                     </div>
