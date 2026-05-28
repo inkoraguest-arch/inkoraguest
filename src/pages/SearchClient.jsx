@@ -345,61 +345,26 @@ export function SearchClient() {
                                         mapPaneName={OverlayViewF.OVERLAY_MOUSE_TARGET}
                                     >
                                         <div 
+                                            className={`balloon-pin ${selectedLocation?.id === loc.id ? 'active' : ''}`}
                                             onClick={() => setSelectedLocation(loc)}
-                                            style={{
-                                                position: 'absolute',
-                                                transform: 'translate(-50%, -100%)',
-                                                display: 'flex',
-                                                flexDirection: 'column',
-                                                alignItems: 'center',
-                                                cursor: 'pointer',
-                                                filter: selectedLocation?.id === loc.id ? 'drop-shadow(0 0 8px rgba(229, 32, 32, 0.8))' : 'drop-shadow(0 4px 6px rgba(0,0,0,0.3))',
-                                                transition: 'all 0.2s ease',
-                                                zIndex: selectedLocation?.id === loc.id ? 100 : 1
-                                            }}
+                                            style={{ zIndex: selectedLocation?.id === loc.id ? 100 : 1 }}
                                         >
-                                            <div style={{
-                                                background: 'var(--surface)',
-                                                padding: '4px 8px',
-                                                borderRadius: '20px',
-                                                marginBottom: '4px',
-                                                display: 'flex',
-                                                alignItems: 'center',
-                                                gap: '4px',
-                                                border: '1px solid var(--border-color)',
-                                                whiteSpace: 'nowrap'
-                                            }}>
-                                                <span style={{ fontSize: '11px', fontWeight: 'bold', color: 'white' }}>
-                                                    {loc.name.split(' ')[0]}
-                                                </span>
-                                                <span style={{ fontSize: '10px', color: 'gold' }}>{loc.rating.toFixed(1)}★</span>
+                                            {loc.avatar ? (
+                                                <img src={loc.avatar} alt={loc.name} />
+                                            ) : (
+                                                <div style={{
+                                                    width: '28px', height: '28px', borderRadius: '50%',
+                                                    background: 'var(--surface)', border: '1px solid var(--border-color)',
+                                                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                                    color: 'white', fontWeight: 'bold', fontSize: '12px'
+                                                }}>
+                                                    {loc.name.charAt(0).toUpperCase()}
+                                                </div>
+                                            )}
+                                            <div className="info">
+                                                <span className="name">{loc.name.split(' ')[0]}</span>
+                                                <span className="rating">★ {loc.rating.toFixed(1)}</span>
                                             </div>
-                                            <div style={{
-                                                width: '40px',
-                                                height: '40px',
-                                                borderRadius: '50%',
-                                                border: '2px solid var(--primary)',
-                                                backgroundImage: loc.avatar ? `url(${loc.avatar})` : 'none',
-                                                backgroundColor: loc.avatar ? 'transparent' : 'var(--surface)',
-                                                backgroundSize: 'cover',
-                                                backgroundPosition: 'center',
-                                                display: 'flex',
-                                                alignItems: 'center',
-                                                justifyContent: 'center',
-                                                color: 'white',
-                                                fontWeight: 'bold',
-                                                fontSize: '16px'
-                                            }}>
-                                                {!loc.avatar && loc.name.charAt(0).toUpperCase()}
-                                            </div>
-                                            <div style={{
-                                                width: 0,
-                                                height: 0,
-                                                borderLeft: '6px solid transparent',
-                                                borderRight: '6px solid transparent',
-                                                borderTop: '6px solid var(--primary)',
-                                                marginTop: '-2px'
-                                            }} />
                                         </div>
                                     </OverlayViewF>
                                 ))}
