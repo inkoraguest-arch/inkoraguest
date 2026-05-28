@@ -10,7 +10,7 @@ export function LandingPage() {
             {/* Navbar Premium */}
             <nav className="nav-premium">
                 <div className="nav-logo">
-                    <img src="/logo inkora.png" alt="Inkora" onError={(e) => { e.target.style.display='none' }} />
+                    <img src="/logo-inkora.png" alt="Inkora" onError={(e) => { e.target.style.display='none' }} />
                     <span className="logo-text">INKORA<br/>GUEST</span>
                 </div>
                 <div className="nav-links">
@@ -29,7 +29,7 @@ export function LandingPage() {
             {/* Hero Section */}
             <section className="hero-premium" id="inicio">
                 <div className="hero-content">
-                    <img src="/logo inkora.png" alt="Inkora Logo" className="hero-logo" />
+                    <img src="/logo-inkora.png" alt="Inkora Logo" className="hero-logo" />
                     <span className="hero-kicker">TATUADORES. ESTÚDIOS. CLIENTES.</span>
                     <h1 className="hero-title">
                         A CONEXÃO QUE<br/>
@@ -58,7 +58,7 @@ export function LandingPage() {
                 <div className="hero-visual">
                     {/* The giant metallic needle logo placeholder */}
                     <div className="hero-logo-glowing">
-                        <img src="/logo inkora.png" alt="Inkora Needle" className="glow-needle" onError={(e) => { e.target.style.display='none' }} />
+                        <img src="/logo-inkora.png" alt="Inkora Logo" className="glow-needle" onError={(e) => { e.target.style.display='none' }} />
                     </div>
                     {/* Fake Mobile App Mockup */}
                     <div className="app-mockup">
