@@ -678,8 +678,10 @@
         width: 280px;
         height: 280px;
         position: absolute;
-        top: auto;
-        left: auto;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        right: 0;
         transform: none;
         margin: auto;
         z-index: 1;

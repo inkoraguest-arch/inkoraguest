@@ -31,12 +31,23 @@ export function LanguageSelector({ variant = 'default' }) {
         setCurrentLang(lang);
         setIsOpen(false);
 
-        // Interact with the hidden Google Translate widget
+        // Try to trigger the Google Translate dropdown directly
         const select = document.querySelector('.goog-te-combo');
         if (select) {
             select.value = lang.code;
-            select.dispatchEvent(new Event('change'));
+            select.dispatchEvent(new Event('change', { bubbles: true, cancelable: true }));
         }
+
+        // Fallback: Set Google Translate cookie and reload the page instantly
+        document.cookie = `googtrans=/pt/${lang.code}; path=/; domain=${window.location.hostname}`;
+        document.cookie = `googtrans=/pt/${lang.code}; path=/;`;
+        
+        // Wait a tiny bit to allow the change event to fire, otherwise reload
+        setTimeout(() => {
+            if (document.querySelector('html').lang !== lang.code) {
+                window.location.reload();
+            }
+        }, 300);
     };
 
     return (
