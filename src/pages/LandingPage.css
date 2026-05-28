@@ -167,6 +167,14 @@
     margin-bottom: 20px;
 }
 
+.hero-logo {
+    max-width: 120px;
+    height: auto;
+    margin-bottom: 24px;
+    border-radius: 12px;
+    box-shadow: 0 0 20px rgba(255, 26, 26, 0.2);
+}
+
 .hero-title {
     font-family: 'Syncopate', sans-serif;
     font-size: clamp(32px, 5vw, 64px);
@@ -231,8 +239,11 @@
 }
 
 .glow-needle {
-    height: 80%;
+    height: 50%;
+    max-width: 80%;
+    object-fit: contain;
     filter: drop-shadow(0 0 20px rgba(255, 26, 26, 0.8));
+    border-radius: 20px;
 }
 
 .app-mockup {
