@@ -23,13 +23,15 @@
 }
 
 .topbar-logo-img {
-    height: 36px;
-    object-fit: contain;
-    /* Crush blacks in the JPG so screen blending works perfectly without a visible box */
-    mix-blend-mode: screen;
-    filter: contrast(1.5) brightness(1.1);
-    transform: translateY(2px);
-    /* optical alignment */
+    height: 32px;
+    width: auto;
+    border-radius: 50%;
+    filter: drop-shadow(0 0 10px rgba(255, 26, 26, 0.7));
+    transition: filter 0.3s ease;
+}
+
+.topbar-logo-img:hover {
+    filter: drop-shadow(0 0 15px rgba(255, 26, 26, 1));
 }
 
 .notification-bell-container {

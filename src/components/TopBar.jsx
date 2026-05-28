@@ -3,7 +3,6 @@ import { Search, SlidersHorizontal, Bell, Check, Shield } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 import { useUser } from '@clerk/clerk-react';
-import logoHorizontal from '../assets/images/logo-horizontal.jpg';
 import './TopBar.css';
 
 export function TopBar() {
@@ -90,7 +89,7 @@ export function TopBar() {
         <div className="topbar">
             <div className="brand-container">
                 <Link to="/home" className="brand">
-                    <img src={logoHorizontal} alt="Inkora" className="topbar-logo-img" />
+                    <img src="/logo-inkora.png" alt="Inkora" className="topbar-logo-img" />
                 </Link>
 
                 {profile && (

@@ -244,10 +244,9 @@ export function SearchClient() {
                 </div>
             </div>
 
-            <div className="map-container">
-                {showList ? (
-                    <div className="nearest-list-view">
-                        <div className="list-header">
+            <div className="map-and-list-container">
+                <div className={`nearest-list-view ${showList ? 'mobile-visible' : 'mobile-hidden'}`}>
+                    <div className="list-header">
                             <h3>Estúdios & Artistas Próximos</h3>
                             <p>{filteredLocations.length} resultados encontrados</p>
                         </div>
@@ -289,22 +288,22 @@ export function SearchClient() {
                                     </div>
                                 </div>
                             ))}
-                        </div>
                     </div>
-                ) : (
-                    <>
-                        {!isLoaded ? (
-                            <div className="map-loading" style={{ textAlign: 'center', padding: '20px' }}>
-                                <Loader className="spin" size={32} color="var(--primary)" />
-                                <p style={{ marginTop: '10px' }}>Carregando mapa...</p>
-                                {!import.meta.env.VITE_GOOGLE_MAPS_API_KEY && (
-                                    <p style={{ fontSize: '11px', color: '#E52020', maxWidth: '300px', margin: '20px auto' }}>
-                                        ⚠️ <b>Aviso:</b> Chave 'VITE_GOOGLE_MAPS_API_KEY' não encontrada na Vercel.
-                                    </p>
-                                )}
-                            </div>
-                        ) : (
-                            <GoogleMap
+                </div>
+
+                <div className={`map-wrapper ${!showList ? 'mobile-visible' : 'mobile-hidden'}`}>
+                    {!isLoaded ? (
+                        <div className="map-loading" style={{ textAlign: 'center', padding: '20px' }}>
+                            <Loader className="spin" size={32} color="var(--primary)" />
+                            <p style={{ marginTop: '10px' }}>Carregando mapa...</p>
+                            {!import.meta.env.VITE_GOOGLE_MAPS_API_KEY && (
+                                <p style={{ fontSize: '11px', color: '#E52020', maxWidth: '300px', margin: '20px auto' }}>
+                                    ⚠️ <b>Aviso:</b> Chave 'VITE_GOOGLE_MAPS_API_KEY' não encontrada na Vercel.
+                                </p>
+                            )}
+                        </div>
+                    ) : (
+                        <GoogleMap
                                 mapContainerStyle={containerStyle}
                                 center={center}
                                 zoom={13}
@@ -406,8 +405,7 @@ export function SearchClient() {
                                 ))}
                             </GoogleMap>
                         )}
-                    </>
-                )}
+                </div>
 
                 {/* Detail Overlay when a marker is clicked */}
                 {selectedLocation && (
@@ -429,7 +427,9 @@ export function SearchClient() {
                                 Ver Perfil
                             </button>
                         </div>
-                        <button className="close-studio-card" onClick={() => setSelectedLocation(null)}>×</button>
+                        <button className="close-studio-card" onClick={() => setSelectedLocation(null)}>
+                            ×
+                        </button>
                     </div>
                 )}
             </div>
