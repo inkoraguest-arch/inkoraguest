@@ -31,26 +31,38 @@ export function LanguageSelector({ variant = 'default' }) {
         setCurrentLang(lang);
         setIsOpen(false);
 
-        // Try to trigger the Google Translate dropdown directly
+        // Se for português, limpa tudo e recarrega
+        if (lang.code === 'pt') {
+            document.cookie = 'googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+            document.cookie = `googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=${window.location.hostname}`;
+            window.location.hash = '';
+            window.location.reload();
+            return;
+        }
+
+        // Tenta disparar o evento direto no select escondido do widget
         const select = document.querySelector('.goog-te-combo');
         if (select) {
             select.value = lang.code;
-            select.dispatchEvent(new Event('change', { bubbles: true }));
+            select.dispatchEvent(new Event('change', { bubbles: true, cancelable: true }));
         }
 
-        // Set cookies for both /pt and /auto to ensure it catches
+        // Força os cookies agressivamente
         document.cookie = `googtrans=/pt/${lang.code}; path=/;`;
         document.cookie = `googtrans=/auto/${lang.code}; path=/;`;
-        
-        // Se a linguagem for PT (original), limpa os cookies
-        if (lang.code === 'pt') {
-            document.cookie = 'googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+        if (window.location.hostname !== 'localhost') {
+            document.cookie = `googtrans=/pt/${lang.code}; path=/; domain=${window.location.hostname}`;
         }
+        
+        // Aplica o hash na URL
+        window.location.hash = `#googtrans(pt|${lang.code})`;
 
-        // Force a reload to apply the translation cookie if the combo box didn't work
+        // Força um recarregamento se o HTML não tiver sido alterado pela IA do Google após 500ms
         setTimeout(() => {
-            window.location.reload();
-        }, 300);
+            if (document.documentElement.lang !== lang.code) {
+                window.location.reload();
+            }
+        }, 500);
     };
 
     return (
