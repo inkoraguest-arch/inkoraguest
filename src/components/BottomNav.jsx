@@ -1,5 +1,5 @@
 import { NavLink } from 'react-router-dom';
-import { Home, Compass, User, Bookmark, ShoppingBag } from 'lucide-react';
+import { Home, Compass, User, Bookmark, ShoppingBag, Shield } from 'lucide-react';
 import { useUser } from '@clerk/clerk-react';
 import './BottomNav.css';
 
@@ -8,7 +8,7 @@ export function BottomNav() {
     const role = user?.publicMetadata?.role || localStorage.getItem('inkoraRole') || 'client';
     const isClient = role === 'client';
     const profileId = user?.id; // Clerk's ID is used as the profile ID in Supabase
-
+    const isAdmin = user?.primaryEmailAddress?.emailAddress === 'yurilojavirtual@gmail.com';
 
     return (
         <nav className="bottom-nav">
@@ -41,6 +41,13 @@ export function BottomNav() {
                 <User size={24} />
                 <span>Perfil</span>
             </NavLink>
+
+            {isAdmin && (
+                <NavLink to="/admin" className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}>
+                    <Shield size={24} />
+                    <span>Admin</span>
+                </NavLink>
+            )}
         </nav>
     );
 }

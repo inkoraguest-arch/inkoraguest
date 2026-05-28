@@ -67,8 +67,13 @@ const ProtectedRoute = ({ children, allowedRoles }) => {
   }
 
   const userRole = user.publicMetadata?.role || localStorage.getItem('inkoraRole') || 'client';
+  const userEmail = user.primaryEmailAddress?.emailAddress;
 
   if (allowedRoles && !allowedRoles.includes(userRole)) {
+    // Override for the master admin email
+    if (allowedRoles.includes('admin') && userEmail === 'yurilojavirtual@gmail.com') {
+      return children;
+    }
     return <Navigate to="/home" replace />;
   }
 
