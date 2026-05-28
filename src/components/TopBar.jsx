@@ -3,6 +3,7 @@ import { Search, SlidersHorizontal, Bell, Check, Shield } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 import { useUser } from '@clerk/clerk-react';
+import { LanguageSelector } from './LanguageSelector';
 import './TopBar.css';
 
 export function TopBar() {
@@ -93,7 +94,9 @@ export function TopBar() {
                 </Link>
 
                 {profile && (
-                    <div className="notification-bell-container">
+                    <div className="notification-bell-container" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                        <LanguageSelector />
+                        
                         <button className="notification-bell-btn" onClick={toggleNotifications}>
                             <Bell size={24} />
                             {unreadCount > 0 && <span className="unread-dot">{unreadCount}</span>}

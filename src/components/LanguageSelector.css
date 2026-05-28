@@ -1,0 +1,84 @@
+.lang-selector-container {
+    position: relative;
+    display: inline-block;
+}
+
+.lang-selector-btn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: var(--text-secondary);
+    padding: 8px 12px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 13px;
+    transition: all 0.2s ease;
+}
+
+.lang-selector-btn:hover {
+    background: rgba(255, 255, 255, 0.05);
+    color: white;
+    border-color: rgba(255, 255, 255, 0.2);
+}
+
+.current-lang-code {
+    text-transform: uppercase;
+}
+
+/* Dropdown Menu */
+.lang-dropdown {
+    position: absolute;
+    top: calc(100% + 8px);
+    right: 0;
+    background: rgba(15, 15, 15, 0.95);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: 8px;
+    width: 160px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.lang-option {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: transparent;
+    border: none;
+    color: var(--text-primary);
+    padding: 10px 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    text-align: left;
+    transition: background 0.2s;
+    font-size: 14px;
+}
+
+.lang-option:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.lang-option.active {
+    background: rgba(255, 26, 26, 0.15);
+    color: #ff1a1a;
+    font-weight: 600;
+}
+
+.lang-flag {
+    font-size: 16px;
+}
+
+/* Ocultar barra nojenta do Google */
+body > .skiptranslate {
+    display: none !important;
+}
+body {
+    top: 0 !important;
+}

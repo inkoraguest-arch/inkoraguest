@@ -1,5 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import { Sparkles, Store, MapPin, ArrowRight, ShieldCheck, Search, Image as ImageIcon, Briefcase, ShoppingBag, Bell } from 'lucide-react';
+import { LanguageSelector } from '../components/LanguageSelector';
 import './LandingPage.css';
 
 export function LandingPage() {
@@ -21,9 +22,12 @@ export function LandingPage() {
                     <a href="#" onClick={() => navigate('/planos')}>PLANOS</a>
                     <a href="#" onClick={() => navigate('/login')}>LOGIN</a>
                 </div>
-                <button className="btn-glow-outline" onClick={() => navigate('/register')}>
-                    CRIAR CONTA <ArrowRight size={16} />
-                </button>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+                    <LanguageSelector />
+                    <button className="btn-glow-outline" onClick={() => navigate('/register')}>
+                        CRIAR CONTA <ArrowRight size={16} />
+                    </button>
+                </div>
             </nav>
 
             {/* Hero Section */}
