@@ -35,18 +35,21 @@ export function LanguageSelector({ variant = 'default' }) {
         const select = document.querySelector('.goog-te-combo');
         if (select) {
             select.value = lang.code;
-            select.dispatchEvent(new Event('change', { bubbles: true, cancelable: true }));
+            select.dispatchEvent(new Event('change', { bubbles: true }));
         }
 
-        // Fallback: Set Google Translate cookie and reload the page instantly
-        document.cookie = `googtrans=/pt/${lang.code}; path=/; domain=${window.location.hostname}`;
+        // Set cookies for both /pt and /auto to ensure it catches
         document.cookie = `googtrans=/pt/${lang.code}; path=/;`;
+        document.cookie = `googtrans=/auto/${lang.code}; path=/;`;
         
-        // Wait a tiny bit to allow the change event to fire, otherwise reload
+        // Se a linguagem for PT (original), limpa os cookies
+        if (lang.code === 'pt') {
+            document.cookie = 'googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+        }
+
+        // Force a reload to apply the translation cookie if the combo box didn't work
         setTimeout(() => {
-            if (document.querySelector('html').lang !== lang.code) {
-                window.location.reload();
-            }
+            window.location.reload();
         }, 300);
     };
 
