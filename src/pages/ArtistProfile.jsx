@@ -734,8 +734,9 @@ export function ArtistProfile() {
                                         color: 'var(--primary)', border: 'none', padding: '4px 8px', borderRadius: '4px', 
                                         fontSize: '11px', cursor: 'pointer' 
                                     }}
+                                    type="button"
                                 >
-                                    <GpsFixed size={12} /> Usar meu GPS
+                                    <Locate size={12} /> Usar meu GPS
                                 </button>
                             </div>
                             

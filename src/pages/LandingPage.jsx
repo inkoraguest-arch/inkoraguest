@@ -29,7 +29,6 @@ export function LandingPage() {
             {/* Hero Section */}
             <section className="hero-premium" id="inicio">
                 <div className="hero-content">
-                    <img src="/logo-inkora.png" alt="Inkora Logo" className="hero-logo" />
                     <span className="hero-kicker">TATUADORES. ESTÚDIOS. CLIENTES.</span>
                     <h1 className="hero-title">
                         A CONEXÃO QUE<br/>
