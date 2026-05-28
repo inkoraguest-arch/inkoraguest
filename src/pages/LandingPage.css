@@ -669,18 +669,26 @@
         grid-template-columns: 1fr;
     }
     .hero-visual {
-        height: 400px;
-        margin-top: 20px;
+        height: auto;
+        min-height: 400px;
+        margin-top: 40px;
+        margin-bottom: 20px;
     }
     .hero-logo-glowing {
         width: 280px;
         height: 280px;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
     }
     .app-mockup {
-        position: absolute;
+        position: relative;
         height: 350px;
+        width: 220px;
+        top: auto;
         right: auto;
-        transform: none;
-        margin-top: 0;
+        transform: rotate(3deg);
+        margin: 0 auto;
     }
 }
