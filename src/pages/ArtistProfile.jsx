@@ -16,7 +16,7 @@ const GOOGLE_MAPS_LIBRARIES = ['places'];
 export function ArtistProfile() {
     const { id } = useParams();
     const navigate = useNavigate();
-    const { user } = useUser();
+    const { user, isLoaded } = useUser();
     const { signOut } = useClerk();
     
     // Create a mock profile object that mimics the old AuthContext structure for database operations
