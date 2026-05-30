@@ -24,17 +24,14 @@ export function useSyncUser() {
                        localStorage.getItem('inkoraRole') || 
                        'client';
           
-          const { error: insertError } = await supabase
-            .from('profiles')
-            .insert([{
-                id: user.id,
-                full_name: user.fullName || user.username || user.primaryEmailAddress?.emailAddress?.split('@')[0],
-                avatar_url: user.imageUrl,
-                email: user.primaryEmailAddress?.emailAddress,
-                role: role,
-                subscription_plan: 'free',
-                subscription_status: 'inactive'
-            }]);
+            const { error: insertError } = await supabase
+              .from('profiles')
+              .insert([{
+                  id: user.id,
+                  full_name: user.fullName || user.username || user.primaryEmailAddress?.emailAddress?.split('@')[0],
+                  avatar_url: user.imageUrl,
+                  role: role
+              }]);
 
           if (insertError) {
             console.error('[Inkora Sync] Error creating profile:', insertError.message);
