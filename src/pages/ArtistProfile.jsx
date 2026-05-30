@@ -637,7 +637,14 @@ export function ArtistProfile() {
                     existingAccountId: artist.stripeAccountId
                 })
             });
-            const data = await response.json();
+            
+            let data;
+            try {
+                data = await response.json();
+            } catch (e) {
+                const text = await response.text();
+                throw new Error(`Non-JSON response from server: ${response.status} ${text}`);
+            }
             
             if (data.url) {
                 if (data.accountId && !artist.stripeAccountId) {
