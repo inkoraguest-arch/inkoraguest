@@ -63,10 +63,28 @@ export function ArtistProfile() {
     });
     const [products, setProducts] = useState([]);
 
+    const updateStripeOnboardingStatus = async () => {
+        if (!user || user.id !== id) return;
+        try {
+            await supabase.from('profiles').update({ stripe_onboarding_complete: true }).eq('id', id);
+            alert("Conta Stripe conectada com sucesso!");
+            window.history.replaceState({}, document.title, window.location.pathname);
+            fetchArtist();
+        } catch (e) {
+            console.error("Error updating stripe status", e);
+        }
+    };
+
     useEffect(() => {
         fetchArtist();
         fetchGuestSpots();
         fetchProducts();
+        
+        // Check for stripe return url
+        const params = new URLSearchParams(window.location.search);
+        if (params.get('stripe') === 'success') {
+            updateStripeOnboardingStatus();
+        }
     }, [id]);
 
     const fetchGuestSpots = async () => {
@@ -152,7 +170,9 @@ export function ArtistProfile() {
                     longitude: data.longitude,
                     city: data.city,
                     state: data.state,
-                    pixKey: data.pix_key || ''
+                    pixKey: data.pix_key || '',
+                    stripeAccountId: data.stripe_account_id || null,
+                    stripeOnboardingComplete: data.stripe_onboarding_complete || false
                 });
 
                 // Initialize edit form
@@ -218,8 +238,37 @@ export function ArtistProfile() {
         window.open(`https://wa.me/${phone}?text=${message}`, '_blank');
     };
 
-    const handleProductClick = (product) => {
+    const handleProductClick = async (product) => {
         if (!artist) return;
+        
+        // Se o artista tiver Stripe, redireciona para Checkout seguro
+        if (artist.stripeOnboardingComplete && artist.stripeAccountId) {
+            try {
+                setSaving(true);
+                const response = await fetch('/api/checkout-marketplace', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        items: [product],
+                        connectedAccountId: artist.stripeAccountId
+                    })
+                });
+                const data = await response.json();
+                
+                if (data.url) {
+                    window.location.href = data.url;
+                    return; // Para aqui, pois vai redirecionar
+                } else {
+                    console.error("Erro no checkout:", data);
+                }
+            } catch (error) {
+                console.error("Erro ao iniciar Stripe Checkout:", error);
+            } finally {
+                setSaving(false);
+            }
+        }
+
+        // Fallback: WhatsApp / PIX se não tiver Stripe
         const phone = artist.phone ? artist.phone.replace(/\D/g, '') : '5511999999999';
         
         if (artist.pixKey && artist.pixKey.trim() !== '') {
@@ -569,6 +618,36 @@ export function ArtistProfile() {
         }
     };
 
+    const handleConnectStripe = async () => {
+        if (!artist) return;
+        setSaving(true);
+        try {
+            const response = await fetch('/api/create-connect-account', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ 
+                    userId: artist.id,
+                    existingAccountId: artist.stripeAccountId
+                })
+            });
+            const data = await response.json();
+            
+            if (data.url) {
+                if (data.accountId && !artist.stripeAccountId) {
+                    await supabase.from('profiles').update({ stripe_account_id: data.accountId }).eq('id', artist.id);
+                }
+                window.location.href = data.url;
+            } else {
+                throw new Error(data.error || 'Failed to get Stripe URL');
+            }
+        } catch (error) {
+            console.error("Error connecting Stripe:", error);
+            alert("Erro ao conectar com a Stripe.");
+        } finally {
+            setSaving(false);
+        }
+    };
+
     if (loading) {
         return (
             <div className="artist-profile-page" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
@@ -817,6 +896,29 @@ export function ArtistProfile() {
                                     color: 'white', marginTop: '4px'
                                 }}
                             />
+                        </div>
+                    )}
+
+                    {isEditing && (
+                        <div style={{ marginBottom: '24px', marginTop: '16px', padding: '16px', borderRadius: '8px', border: '1px solid var(--border-color)', background: 'var(--bg-tertiary, #1a1a1a)' }}>
+                            <h3 style={{ fontSize: '14px', marginBottom: '8px', color: 'white' }}>Recebimentos por Cartão (Stripe)</h3>
+                            {artist.stripeOnboardingComplete ? (
+                                <p style={{ fontSize: '12px', color: '#4ade80' }}>✅ Conta Stripe conectada e pronta para receber pagamentos.</p>
+                            ) : (
+                                <div>
+                                    <p style={{ fontSize: '12px', color: 'var(--text-secondary)', marginBottom: '12px' }}>
+                                        Conecte sua conta bancária via Stripe para receber pagamentos de clientes por cartão de crédito.
+                                    </p>
+                                    <button 
+                                        onClick={handleConnectStripe}
+                                        disabled={saving}
+                                        style={{ background: '#635BFF', color: 'white', padding: '8px 16px', borderRadius: '8px', border: 'none', fontWeight: 'bold', fontSize: '12px', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '8px' }}
+                                        type="button"
+                                    >
+                                        Conectar com Stripe
+                                    </button>
+                                </div>
+                            )}
                         </div>
                     )}
 
