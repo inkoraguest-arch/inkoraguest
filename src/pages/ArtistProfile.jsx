@@ -191,10 +191,15 @@ export function ArtistProfile() {
     }
 
     useEffect(() => {
-        if (!id) {
-            setLoading(false);
+        if (!id || id === 'undefined') {
+            if (isLoaded && user) {
+                navigate(`/artist/${user.id}`, { replace: true });
+            } else if (isLoaded && !user) {
+                navigate('/', { replace: true });
+            }
             return;
         }
+
         fetchArtist();
         fetchGuestSpots();
         fetchProducts();
@@ -203,7 +208,7 @@ export function ArtistProfile() {
         if (params.get('stripe') === 'success') {
             updateStripeOnboardingStatus();
         }
-    }, [id]);
+    }, [id, isLoaded, user]);
 
     // Note: fetchArtist has been hoisted above.
 
@@ -659,7 +664,17 @@ export function ArtistProfile() {
     }
 
     if (!artist) {
-        return <div className="not-found">Artista não encontrado</div>;
+        return (
+            <div className="not-found" style={{ display: 'flex', flexDirection: 'column', gap: '20px', alignItems: 'center', justifyContent: 'center', height: '80vh' }}>
+                <p>Artista não encontrado</p>
+                <button 
+                    onClick={() => { setLoading(true); fetchArtist(); }}
+                    style={{ padding: '10px 20px', background: 'var(--primary)', color: 'white', border: 'none', borderRadius: '8px', cursor: 'pointer' }}
+                >
+                    Recarregar Perfil
+                </button>
+            </div>
+        );
     }
 
     // Determine if the current user is viewing their own profile (robust check)
