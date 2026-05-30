@@ -75,49 +75,8 @@ export function ArtistProfile() {
         }
     };
 
-    useEffect(() => {
-        fetchArtist();
-        fetchGuestSpots();
-        fetchProducts();
-        
-        // Check for stripe return url
-        const params = new URLSearchParams(window.location.search);
-        if (params.get('stripe') === 'success') {
-            updateStripeOnboardingStatus();
-        }
-    }, [id]);
-
-    const fetchGuestSpots = async () => {
+    async function fetchArtist() {
         try {
-            const { data, error } = await supabase
-                .from('guest_spots')
-                .select('*')
-                .eq('artist_id', id)
-                .order('start_date', { ascending: true });
-
-            if (data) setGuestSpots(data);
-        } catch (e) {
-            console.error("Error fetching guest spots", e);
-        }
-    };
-
-    const fetchProducts = async () => {
-        try {
-            const { data, error } = await supabase
-                .from('products')
-                .select('*')
-                .eq('seller_id', id)
-                .order('created_at', { ascending: false });
-
-            if (data) setProducts(data);
-        } catch (e) {
-            console.error("Error fetching products", e);
-        }
-    };
-
-    const fetchArtist = async () => {
-        try {
-            // First try to find it in the database (assuming ID is a UUID from Supabase)
             const { data, error } = await supabase
                 .from('profiles')
                 .select(`
@@ -175,7 +134,6 @@ export function ArtistProfile() {
                     stripeOnboardingComplete: data.stripe_onboarding_complete || false
                 });
 
-                // Initialize edit form
                 setEditForm({
                     bio: finalBio,
                     styles: styles.join(', '),
@@ -193,7 +151,6 @@ export function ArtistProfile() {
                 if (data.latitude && data.longitude) {
                     setMapCenter({ lat: Number(data.latitude), lng: Number(data.longitude) });
                 }
-
             } else {
                 setArtist(null);
             }
@@ -203,7 +160,52 @@ export function ArtistProfile() {
         } finally {
             setLoading(false);
         }
-    };
+    }
+
+    async function fetchGuestSpots() {
+        try {
+            const { data, error } = await supabase
+                .from('guest_spots')
+                .select('*')
+                .eq('artist_id', id)
+                .order('start_date', { ascending: true });
+
+            if (data) setGuestSpots(data);
+        } catch (e) {
+            console.error("Error fetching guest spots", e);
+        }
+    }
+
+    async function fetchProducts() {
+        try {
+            const { data, error } = await supabase
+                .from('products')
+                .select('*')
+                .eq('seller_id', id)
+                .order('created_at', { ascending: false });
+
+            if (data) setProducts(data);
+        } catch (e) {
+            console.error("Error fetching products", e);
+        }
+    }
+
+    useEffect(() => {
+        if (!id) {
+            setLoading(false);
+            return;
+        }
+        fetchArtist();
+        fetchGuestSpots();
+        fetchProducts();
+        
+        const params = new URLSearchParams(window.location.search);
+        if (params.get('stripe') === 'success') {
+            updateStripeOnboardingStatus();
+        }
+    }, [id]);
+
+    // Note: fetchArtist has been hoisted above.
 
     const handleShare = () => {
         const url = window.location.href;
