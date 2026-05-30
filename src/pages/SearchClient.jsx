@@ -340,12 +340,35 @@ export function SearchClient() {
                                 )}
 
                                 {filteredLocations.map(loc => (
-                                    <MarkerF
+                                    <OverlayViewF
                                         key={loc.id}
                                         position={loc.location}
-                                        onClick={() => setSelectedLocation(loc)}
-                                        title={loc.name}
-                                    />
+                                        mapPaneName={OverlayViewF.OVERLAY_MOUSE_TARGET}
+                                        getPixelPositionOffset={(width, height) => ({ x: -(width / 2), y: -height })}
+                                    >
+                                        <div 
+                                            className={`balloon-pin ${selectedLocation?.id === loc.id ? 'active' : ''}`}
+                                            onClick={() => setSelectedLocation(loc)}
+                                            style={{ zIndex: selectedLocation?.id === loc.id ? 100 : 1 }}
+                                        >
+                                            {loc.avatar ? (
+                                                <img src={loc.avatar} alt={loc.name} />
+                                            ) : (
+                                                <div style={{
+                                                    width: '28px', height: '28px', borderRadius: '50%',
+                                                    background: 'var(--surface)', border: '1px solid var(--border-color)',
+                                                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                                    color: 'white', fontWeight: 'bold', fontSize: '12px'
+                                                }}>
+                                                    {loc.name.charAt(0).toUpperCase()}
+                                                </div>
+                                            )}
+                                            <div className="info">
+                                                <span className="name">{loc.name.split(' ')[0]}</span>
+                                                <span className="rating">★ {loc.rating.toFixed(1)}</span>
+                                            </div>
+                                        </div>
+                                    </OverlayViewF>
                                 ))}
                             </GoogleMap>
                         )}
