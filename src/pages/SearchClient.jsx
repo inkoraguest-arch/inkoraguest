@@ -131,10 +131,11 @@ export function SearchClient() {
                         } catch (e) { }
                     }
 
-                    // Use real coordinates if they exist, otherwise fallback to mock random near center
-                    const hasRealCoords = loc.latitude != null && loc.longitude != null;
-                    const lat = hasRealCoords ? Number(loc.latitude) : defaultCenter.lat + (Math.random() - 0.5) * 0.1;
-                    const lng = hasRealCoords ? Number(loc.longitude) : defaultCenter.lng + (Math.random() - 0.5) * 0.1;
+                    const latNum = Number(loc.latitude);
+                    const lngNum = Number(loc.longitude);
+                    const hasRealCoords = !isNaN(latNum) && !isNaN(lngNum) && loc.latitude != null && loc.longitude != null;
+                    const lat = hasRealCoords ? latNum : defaultCenter.lat + (Math.random() - 0.5) * 0.1;
+                    const lng = hasRealCoords ? lngNum : defaultCenter.lng + (Math.random() - 0.5) * 0.1;
 
                     let distance = null;
                     if (currentUserPos) {
