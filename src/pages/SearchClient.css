@@ -134,15 +134,15 @@
     bottom: 24px;
     left: 20px;
     right: 20px;
-    background: var(--surface);
+    background: #050505;
     border-radius: 16px;
     padding: 16px;
     display: flex;
     align-items: center;
     gap: 16px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.8);
     border: 1px solid var(--border-color);
-    z-index: 100;
+    z-index: 9999;
 }
 
 .studio-map-img {

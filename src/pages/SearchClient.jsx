@@ -343,6 +343,7 @@ export function SearchClient() {
                                         key={loc.id}
                                         position={loc.location}
                                         mapPaneName={OverlayViewF.OVERLAY_MOUSE_TARGET}
+                                        getPixelPositionOffset={(width, height) => ({ x: -(width / 2), y: -height })}
                                     >
                                         <div 
                                             className={`balloon-pin ${selectedLocation?.id === loc.id ? 'active' : ''}`}
