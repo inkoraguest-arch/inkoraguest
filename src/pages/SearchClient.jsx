@@ -343,10 +343,6 @@ export function SearchClient() {
                                         key={loc.id}
                                         position={loc.location}
                                         onClick={() => setSelectedLocation(loc)}
-                                        icon={loc.avatar ? {
-                                            url: loc.avatar,
-                                            scaledSize: new window.google.maps.Size(36, 36)
-                                        } : undefined}
                                         title={loc.name}
                                     />
                                 ))}
